@@ -13,33 +13,59 @@ for($i=0; $i<4; $i++){
   if($sesi == 'all'){
     if(cekNomor($tujuan) == 'server1'){
       $result = json_decode(kirim_pesan($tujuan,$pesan,'server1'), true);
-      if(isset($result['success'])){
-        query("UPDATE `message` SET `status`='sukses',`keterangan`='Pesan berhasil dikirim',`sesi_pengirim`='server1' WHERE id = '$id' ");
+      if(isset($result['status'])){
+        if($result['status'] == 200){
+          query("UPDATE `message` SET `status`='sukses',`keterangan`='Pesan berhasil dikirim',`sesi_pengirim`='server1' WHERE id = '$id' ");
+        }else{
+          $result = json_decode(kirim_pesan_backup($tujuan,$pesan,'server1'), true);
+          if(isset($result['status'])){
+            if($result['status'] == 200){
+              query("UPDATE `message` SET `status`='sukses',`keterangan`='Pesan berhasil dikirim',`sesi_pengirim`='backup_server1' WHERE id = '$id' ");
+            }
+          }
+        }
       }else{
         $result = json_decode(kirim_pesan($tujuan,$pesan,'server2'), true);
-          if(isset($result['success'])){
+        if(isset($result['status'])){
+          if($result['status'] == 200){
             query("UPDATE `message` SET `status`='sukses',`keterangan`='Pesan berhasil dikirim',`sesi_pengirim`='server2' WHERE id = '$id' ");
           }else{
-            $result = json_decode(kirim_pesan($tujuan,$pesan,'server3'), true);
-            if(isset($result['success'])){
-              query("UPDATE `message` SET `status`='sukses',`keterangan`='Pesan berhasil dikirim',`sesi_pengirim`='server3' WHERE id = '$id' ");
-            } 
-          } 
+            $result = json_decode(kirim_pesan_backup($tujuan,$pesan,'server2'), true);
+            if(isset($result['status'])){
+              if($result['status'] == 200){
+                query("UPDATE `message` SET `status`='sukses',`keterangan`='Pesan berhasil dikirim',`sesi_pengirim`='backup_server2' WHERE id = '$id' ");
+              }
+            }
+          }
+        }
       }
     }else{
       $result = json_decode(kirim_pesan($tujuan,$pesan,'server2'), true);
-      if(isset($result['success'])){
-        query("UPDATE `message` SET `status`='sukses',`keterangan`='Pesan berhasil dikirim',`sesi_pengirim`='server2' WHERE id = '$id' ");
+      if(isset($result['status'])){
+        if($result['status'] == 200){
+          query("UPDATE `message` SET `status`='sukses',`keterangan`='Pesan berhasil dikirim',`sesi_pengirim`='server2' WHERE id = '$id' ");
+        }else{
+          $result = json_decode(kirim_pesan_backup($tujuan,$pesan,'server2'), true);
+          if(isset($result['status'])){
+            if($result['status'] == 200){
+              query("UPDATE `message` SET `status`='sukses',`keterangan`='Pesan berhasil dikirim',`sesi_pengirim`='backup_server2' WHERE id = '$id' ");
+            }
+          }
+        }
       }else{
         $result = json_decode(kirim_pesan($tujuan,$pesan,'server1'), true);
-          if(isset($result['success'])){
+        if(isset($result['status'])){
+          if($result['status'] == 200){
             query("UPDATE `message` SET `status`='sukses',`keterangan`='Pesan berhasil dikirim',`sesi_pengirim`='server1' WHERE id = '$id' ");
           }else{
-            $result = json_decode(kirim_pesan($tujuan,$pesan,'server3'), true);
-            if(isset($result['success'])){
-              query("UPDATE `message` SET `status`='sukses',`keterangan`='Pesan berhasil dikirim',`sesi_pengirim`='server3' WHERE id = '$id' ");
+            $result = json_decode(kirim_pesan_backup($tujuan,$pesan,'server1'), true);
+            if(isset($result['status'])){
+              if($result['status'] == 200){
+                query("UPDATE `message` SET `status`='sukses',`keterangan`='Pesan berhasil dikirim',`sesi_pengirim`='backup_server1' WHERE id = '$id' ");
+              }
             }
-          } 
+          }
+        }
       }
     }
   }

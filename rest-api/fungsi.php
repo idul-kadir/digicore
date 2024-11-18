@@ -10,8 +10,6 @@ function kirim_pesan($tujuan,$pesan,$server){
     $url = 'https://wa1.digicore.web.id/api/send-message';
   }elseif($server == 'server2'){
     $url = 'https://wa2.digicore.web.id/api/send-message';
-  }elseif($server == 'server3'){
-    $url = 'https://wa3.digicore.web.id/api/send-message';
   }
 
   $data = json_encode(["to" => formatNomor($tujuan), "message" => $pesan]);
@@ -34,8 +32,55 @@ function kirim_pesan($tujuan,$pesan,$server){
   $response = curl_exec($curl);
 
   curl_close($curl);
-  return $response;
 
+  $result = json_decode($response, true);
+  if(isset($result['success'])){
+    $hasil = ["status" => 200, "message" => "Pesan berhasil terkirim"];
+  }else{
+    $hasil = ["status" => 500, "message" => "Pesan gagal terkirim"];
+  }
+
+  return json_encode($hasil);
+
+}
+
+function kirim_pesan_backup($tujuan,$pesan,$server){
+
+  $data = ["session" => $server, "to" => formatNomor($tujuan), "text" => $pesan];
+
+  $curl = curl_init();
+  
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => 'https://backup.digicore.web.id/send-message',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'POST',
+    CURLOPT_POSTFIELDS => json_encode($data),
+      CURLOPT_HTTPHEADER => array(
+        'Content-Type: application/json'
+      ),
+    ));
+    
+    $response = curl_exec($curl);
+    
+    curl_close($curl);
+
+    $result = json_decode($response, true);
+    if(isset($result['data']['status'])){
+      if($result['data']['status'] == 1){
+        $hasil = ["status" => 200, "message" => "Pesan berhasil terkirim"];
+      }else{
+        $hasil = ["status" => 500, "message" => "Pesan gagal terkirim"];
+      }
+    }else{
+      $hasil = ["status" => 500, "message" => "Pesan gagal terkirim"];
+    }
+
+    return json_encode($hasil);
 }
 
 function formatNomor($number) {
@@ -96,13 +141,12 @@ function antrian($tujuan,$pesan, $id_pesan){
 }
 
 function pilihServer(){
-  return 'server1';
-  exit;
   $cari_server = query("SELECT * FROM `message` WHERE `status` != 'pending' AND keterangan != '' ORDER BY id DESC LIMIT 1");
   foreach($cari_server as $server){
     if($server['sesi_pengirim'] == '' OR $server['sesi_pengirim'] == 'server1'){
       return 'server2';
     }else{
+      return 'server1';
     }
   }
 }

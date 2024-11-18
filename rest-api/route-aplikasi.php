@@ -11,17 +11,6 @@ $metode_pengiriman = $_SERVER['REQUEST_METHOD'];
 
 if($metode_pengiriman == 'POST'){
   switch($kategori){
-    case 'kirim-pesan':
-      if(isset($_POST['tujuan']) AND isset($_POST['pesan'])){
-        $tujuan = tujuan($_POST['tujuan']);
-        $pesan = bersihkan($_POST['pesan']);
-        $waktu = time();
-        antrian($tujuan,$pesan);
-      }else{
-        $result = ["status" => 501, "deskripsi" => "Parameter tidak lengkap"];
-      }
-      break;
-
     case 'registrasi':
       if(isset($_POST['nama']) AND isset($_POST['no-wa']) AND isset($_POST['domain'])){
         $nama = bersihkan($_POST['nama']);
@@ -45,9 +34,6 @@ if($metode_pengiriman == 'POST'){
     case 'send-message':
       $header = getallheaders();
       $data_json = json_decode(file_get_contents("php://input"), true);
-      $file = fopen("data.json","w+");
-      fwrite($file,json_encode($header));
-      fclose($file);
       if(isset($header['Apikey'])){
         $apikey = bersihkan($header['Apikey']);
         $cek_api = query("SELECT * FROM `user` WHERE apikey = '$apikey' ");
