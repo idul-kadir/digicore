@@ -1,6 +1,6 @@
 <?php
 date_default_timezone_set('Asia/Makassar');
-require 'koneksi.php';
+// require 'koneksi.php';
 $owner = '089669106718';
 
 function kirim_pesan($tujuan,$pesan,$server){
