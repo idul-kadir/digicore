@@ -1,0 +1,116 @@
+{
+  "produk": [
+    {
+      "kode_produk": "free",
+      "nama_produk": "GRATIS",
+      "harga": "Gratis",
+      "syarat": {
+        "berlaku": [
+          "350 pesan perbulan",
+          "nomor disediakan oleh digicore",
+          "Adanya watermark dari digicore",
+          "didukung Rest API",
+          "Nomor pengirim acak",
+          "Monitoring pesan",
+          "Dukungan tim teknik terbatas"
+        ],
+        "tidak berlaku": ["webhook", "perpanjang otomatis"]
+      }
+    },
+    {
+      "kode_produk": "otp",
+      "nama_produk": "OTP",
+      "harga": "Rp 25.000",
+      "syarat": {
+        "berlaku": [
+          "750 pesan lifetime",
+          "maksimal 100 karakter",
+          "nomor disediakan oleh digicore",
+          "didukung Rest API",
+          "Nomor pengirim acak",
+          "Monitoring pesan",
+          "Notifikasi limit",
+          "Perpanjang otomatis",
+          "Dukungan tim teknis"
+        ],
+        "tidak berlaku": ["webhook"]
+      }
+    },
+    {
+      "kode_produk": "mandiri",
+      "nama_produk": "MANDIRI",
+      "harga": "Rp 50.000",
+      "syarat": {
+        "berlaku": [
+          "Berlaku 1 bulan",
+          "Unlimited pesan",
+          "nomor disediakan oleh client",
+          "didukung Rest API",
+          "Monitoring pesan",
+          "Notifikasi koneksi",
+          "Perpanjang otomatis",
+          "Dukungan tim teknis"
+        ],
+        "tidak berlaku": ["webhook"]
+      }
+    },
+    {
+      "kode_produk": "bisnis",
+      "nama_produk": "BISNIS",
+      "harga": "Rp 70.000",
+      "syarat": {
+        "berlaku": [
+          "Berlaku 1 bulan",
+          "Unlimited pesan",
+          "nomor disediakan oleh DigiCore",
+          "didukung Rest API",
+          "Monitoring pesan",
+          "Nomor pengirim acak",
+          "Perpanjang otomatis",
+          "Dukungan tim teknis"
+        ],
+        "tidak berlaku": ["webhook"]
+      }
+    },
+    {
+      "kode_produk": "bos",
+      "nama_produk": "SEMPURNA",
+      "harga": "Rp 120.000",
+      "syarat": {
+        "berlaku": [
+          "Berlaku 1 bulan",
+          "Unlimited pesan",
+          "nomor disediakan oleh DigiCore",
+          "didukung Rest API",
+          "Monitoring pesan",
+          "Nomor pengirim tetap",
+          "Perpanjang otomatis",
+          "Dukungan tim teknis penuh",
+          "Nomor dedicated",
+          "Webhook"
+        ],
+        "tidak berlaku": []
+      }
+    },
+    {
+      "kode_produk": "sponsorsip",
+      "nama_produk": "SPONSORSHIP",
+      "harga": "Hubungi Tim Teknis",
+      "syarat": {
+        "berlaku": [
+          "Berlaku sesuai kesepakatan",
+          "Unlimited pesan",
+          "nomor disediakan oleh DigiCore",
+          "didukung Rest API",
+          "Monitoring pesan",
+          "Nomor pengirim tetap",
+          "Perpanjang otomatis",
+          "Dukungan tim teknis penuh",
+          "Nomor dedicated",
+          "Webhook"
+        ],
+        "tidak berlaku": []
+      }
+    }
+  ]
+}

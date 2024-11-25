@@ -1,3 +1,7 @@
 RewriteEngine On
 
-RewriteRule ^panel-wa panel-whatsapp.php
+RewriteRule ^webhook$ callback.php [L]
+RewriteRule ^send-message$ route-aplikasi.php [L]
+RewriteRule ^eksekusi$ eksekusi-pesan.php [L]
+RewriteRule ^panel-wa$ panel-whatsapp.php [L]
+RewriteRule ^koneksi$ cek-koneksi.php [L] 

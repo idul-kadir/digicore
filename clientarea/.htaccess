@@ -1,0 +1,27 @@
+RewriteEngine On
+
+# Menghilangkan ekstensi .php dari URL
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.\*)$ $1.php [L]
+
+# Blokir akses ke file sensitif
+
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql|bak)$">
+Order allow,deny
+Deny from all
+</FilesMatch>
+
+SetEnv PENGACAK baraba_skali_pakh
+SetEnv USER_DB root
+SetEnv PASS_DB 
+SetEnv DB digicore
+SetEnv HOST localhost
+
+RewriteRule ^login$ login/index.php [L]
+RewriteRule ^beranda$ hal-beranda.php [L]
+RewriteRule ^whatsapp$ hal-whatsapp.php [L]
+RewriteRule ^admin$ pengelola/index.php [L]
+RewriteRule ^config$ function.php [L]
+RewriteRule ^user$ index.php [L]

@@ -36,6 +36,11 @@ if($data['category'] == 'status'){
       fwrite($file,json_encode($pesan));
       fclose($file);
     }
+  }else{
+    $server = $data['route'];
+    $file = fopen("$server.json","w+");
+    fwrite($file,json_encode($data));
+    fclose($file);
   }
 }elseif($data['category'] == 'periodic_status'){
   $status = $data['status'];
