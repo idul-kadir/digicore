@@ -32,6 +32,9 @@ if(isset($_POST['login'])){
     if($pass == $password){
       echo 'success|Login berhasil';
       $_SESSION['id'] = $data['id'];
+      if($username == $_SERVER['PENGELOLA']){
+        $_SESSION['pengelola'] = $username;
+      }
     }else{
       echo 'error|Login GAGAL. Password salah!!!';
     }

@@ -1,3 +1,10 @@
+<?php
+session_start();
+if(!isset($_SESSION['pengelola'])){
+  header("location: ../login");
+  exit;
+}
+?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -147,31 +154,47 @@
             <h5 class="modal-title" id="staticBackdropLabel">Tambah Produk</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <div class="modal-body">
-            <div class="mb-3">
-              <label for="kode-produk" class="form-label">Kode Produk</label>
-              <input type="text" class="form-control" id="kode-produk" placeholder="OTP 1">
+          <form action="" id="form-tambah-produk">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="kode-produk" class="form-label">Kode Produk</label>
+                <input type="text" name="kode" class="form-control" id="kode-produk" required placeholder="OTP 1">
+              </div>
+              <div class="mb-3">
+                <label for="nama-produk" class="form-label">Nama Produk</label>
+                <input type="text" name="nama" class="form-control" id="nama-produk" placeholder="OTP" required>
+              </div>
+              <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label">Kategori</label>
+                <select class="form-select" aria-label="Default select example" name="kategori" required>
+                  <option selected value="">Pilih Kategori</option>
+                  <option value="Whatsapp">Whatsapp</option>
+                  <option value="IP Public">IP Public</option>
+                  <option value="VPN Tunnel">VPN Tunnel</option>
+                  <option value="Docker">Docker</option>
+                  <option value="Domain">Domain</option>
+                  <option value="Hosting">Hosting</option>
+                  <!-- <option value=""></option> -->
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="harga" class="form-label">Harga</label>
+                <input type="number" class="form-control" id="harga" placeholder="30000" name="harga" required>
+              </div>
+              <div class="mb-3">
+                <label for="syarat-terima" class="form-label">S&K Terima</label>
+                <textarea class="form-control" id="syarat-terima" rows="3" name="s-k-terima"></textarea>
+              </div>
+              <div class="mb-3">
+                <label for="syarat-tolak" class="form-label">S&K Tolak</label>
+                <textarea class="form-control" id="syarat-tolak" rows="3" name="s-k-tolak"></textarea>
+              </div>
             </div>
-            <div class="mb-3">
-              <label for="nama-produk" class="form-label">Nama Produk</label>
-              <input type="text" class="form-control" id="nama-produk" placeholder="OTP">
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" id="tbl-tambah-produk">Tambah Produk</button>
             </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Kategori</label>
-              <select class="form-select" aria-label="Default select example">
-                <option selected>Pilih Kategori</option>
-                <option value="Whatsapp">Whatsapp</option>
-                <option value="IP Public">IP Public</option>
-                <option value="VPN Tunnel">VPN Tunnel</option>
-                <option value="Docker">Docker</option>
-                <!-- <option value=""></option> -->
-              </select>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Understood</button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
@@ -181,6 +204,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
       $(document).ready(function(){
 
@@ -190,6 +214,23 @@
         setInterval(() => {
           $('#panel-koneksi').load('panel-koneksi.php');
         }, 60000);
+
+        $('#form-tambah-produk').submit(function(e){
+          e.preventDefault();
+          $('#tbl-tambah-produk').attr('disabled','disabled');
+          $('#tbl-tambah-produk').text('Menambah produk...');
+          let data = $(this).serialize();
+          $.post('proses.php','tambah-produk=true&'+data, function(respon){
+            let pecah = respon.split('|');
+            Swal.fire({
+              position: "center",
+              icon: pecah[0],
+              title: pecah[1],
+              showConfirmButton: false,
+              timer: 2500
+            });
+          })
+        })
 
       })
     </script>

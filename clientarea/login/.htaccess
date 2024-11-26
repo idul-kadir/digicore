@@ -3,3 +3,4 @@ RewriteEngine On
 RewriteRule ^login$ index.php [L]
 RewriteRule ^daftar$ form-dft.php [L]
 RewriteRule ^proses-data$ mengolah-data.php [L]
+SetEnv PENGELOLA 089669106718
