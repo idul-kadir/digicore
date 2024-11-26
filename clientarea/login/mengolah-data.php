@@ -21,3 +21,21 @@ if(isset($_POST['daftar'])){
     echo 'error|Nomor Telp sudah terdaftar. Silahkan gunakan fitur lupa password untuk melakukan reset password dan pastikan nomor telp anda terdaftar di Whatsapp';
   }
 }
+
+if(isset($_POST['login'])){
+  $username = bersihkan($_POST['username']);
+  $password = md5($_SERVER['PENGACAK'] . md5(bersihkan($_POST['password'])) . $_SERVER['PENGACAK']);
+  $result = query("SELECT * FROM `user` WHERE `wa` = '$username' ");
+  if(mysqli_num_rows($result)>0){
+    $data = mysqli_fetch_assoc($result);
+    $pass = $data['password'];
+    if($pass == $password){
+      echo 'success|Login berhasil';
+      $_SESSION['id'] = $data['id'];
+    }else{
+      echo 'error|Login GAGAL. Password salah!!!';
+    }
+  }else{
+    echo 'error|Username tidak terdaftar';
+  }
+}

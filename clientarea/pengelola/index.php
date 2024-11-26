@@ -27,10 +27,9 @@
       <div class="row">
         <div class="col-sm-12 col-md-8 col-lg-8">
           <div class="row" id="panel-koneksi"></div>
-          <hr>
 
           <center><h4>Produk</h4></center>
-          <button type="button" class="btn btn-primary mb-2">Tambah Produk</button>
+          <button type="button" class="btn btn-primary btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#modal-tambah-produk">Tambah Produk</button>
           <table class="table" id="produk">
             <thead>
               <tr class="table-dark">
@@ -58,7 +57,7 @@
           <hr>
 
           <center><h4>Layanan</h4></center>
-          <div class="row mt-2">
+          <div class="row mt-4">
           <?php
           for($i=0; $i<11; $i++){
           ?>
@@ -141,7 +140,7 @@
     </div>
 
     <!-- Modal -->
-    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal fade" id="modal-tambah-produk" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -151,7 +150,22 @@
           <div class="modal-body">
             <div class="mb-3">
               <label for="kode-produk" class="form-label">Kode Produk</label>
-              <input type="email" class="form-control" id="kode-produk" placeholder="name@example.com">
+              <input type="text" class="form-control" id="kode-produk" placeholder="OTP 1">
+            </div>
+            <div class="mb-3">
+              <label for="nama-produk" class="form-label">Nama Produk</label>
+              <input type="text" class="form-control" id="nama-produk" placeholder="OTP">
+            </div>
+            <div class="mb-3">
+              <label for="exampleFormControlInput1" class="form-label">Kategori</label>
+              <select class="form-select" aria-label="Default select example">
+                <option selected>Pilih Kategori</option>
+                <option value="Whatsapp">Whatsapp</option>
+                <option value="IP Public">IP Public</option>
+                <option value="VPN Tunnel">VPN Tunnel</option>
+                <option value="Docker">Docker</option>
+                <!-- <option value=""></option> -->
+              </select>
             </div>
           </div>
           <div class="modal-footer">

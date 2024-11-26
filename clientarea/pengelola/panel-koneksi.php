@@ -30,7 +30,8 @@ if($b_server2['status'] == 'connected'){
 }
 ?>
 <div class="container">
-  <div class="row">
+  <center><h4>Status Koneksi Whatsapp</h4></center>
+  <div class="row mt-4">
     <div class="col-sm-12 col-md-6 col-lg-4">
       <div class="card h-100">
         <h5 class="card-header">SERVER 1 <?= $icon1; ?></h5>
@@ -63,4 +64,5 @@ if($b_server2['status'] == 'connected'){
     </div>
     <div class="col-sm-12 col-md-6 col-lg-3"></div>
   </div>
+  <hr>
 </div>

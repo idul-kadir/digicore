@@ -19,7 +19,7 @@ SetEnv PASS_DB
 SetEnv DB digicore
 SetEnv HOST localhost
 
-RewriteRule ^login$ login/index.php [L]
+RewriteRule ^login-pengguna login/index.php [L]
 RewriteRule ^beranda$ hal-beranda.php [L]
 RewriteRule ^whatsapp$ hal-whatsapp.php [L]
 RewriteRule ^admin$ pengelola/index.php [L]
