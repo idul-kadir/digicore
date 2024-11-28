@@ -4,6 +4,7 @@ if(!isset($_SESSION['pengelola'])){
   header("location: ../login");
   exit;
 }
+require '../function.php';
 ?>
 <!doctype html>
 <html lang="en">
@@ -40,25 +41,27 @@ if(!isset($_SESSION['pengelola'])){
           <table class="table" id="produk">
             <thead>
               <tr class="table-dark">
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
+                <th scope="col" width="25px">#</th>
+                <th scope="col">Produk</th>
+                <th scope="col">Kategori</th>
+                <th scope="col">Harga</th>
+                <th scope="col">Status</th>
               </tr>
             </thead>
             <tbody>
+              <?php
+              $no = 1;
+              $result = query("SELECT * FROM `produk`");
+              foreach($result as $data){
+              ?>
               <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
+                <th scope="row"><?= $no++; ?></th>
+                <td><?= $data['nama'] ?></td>
+                <td><?= $data['kategori'] ?></td>
+                <td><?= $data['harga'] ?></td>
+                <td><?= $data['status'] ?></td>
               </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
+              <?php } ?>
             </tbody>
           </table>
           <hr>
@@ -221,6 +224,8 @@ if(!isset($_SESSION['pengelola'])){
           $('#tbl-tambah-produk').text('Menambah produk...');
           let data = $(this).serialize();
           $.post('proses.php','tambah-produk=true&'+data, function(respon){
+            $('#tbl-tambah-produk').removeAttr('disabled');
+            $('#tbl-tambah-produk').text('Tambah Produk');
             let pecah = respon.split('|');
             Swal.fire({
               position: "center",
@@ -229,6 +234,14 @@ if(!isset($_SESSION['pengelola'])){
               showConfirmButton: false,
               timer: 2500
             });
+            if(pecah[0] == 'success'){
+              setTimeout(() => {
+                $('#modal-tambah-produk').modal('hide');
+              }, 2600);
+              setTimeout(() => {
+                location.reload()
+              }, 2800);
+            }
           })
         })
 
