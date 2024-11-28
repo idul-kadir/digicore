@@ -177,6 +177,7 @@ require '../function.php';
                   <option value="Docker">Docker</option>
                   <option value="Domain">Domain</option>
                   <option value="Hosting">Hosting</option>
+                  <option value="VPS">VPS</option>
                   <!-- <option value=""></option> -->
                 </select>
               </div>
