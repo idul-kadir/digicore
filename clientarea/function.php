@@ -98,3 +98,7 @@ function format_nomor($nomor){
     return $nomor;
 
 }
+
+function rupiah($angka) {
+    return "Rp " . number_format($angka, 0, ',', '.');
+}

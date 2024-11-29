@@ -1,5 +1,9 @@
 <?php
 session_start();
+if(!isset($_SESSION['id'])){
+  exit;
+}
+require 'function.php';
 $_SESSION['halaman'] = 'whatsapp';
 ?>
 <style>
@@ -15,27 +19,31 @@ $_SESSION['halaman'] = 'whatsapp';
     <div class="row">
 
       <?php
-        $data = json_decode(file_get_contents("whatsapp.json"), true);
-        foreach($data['produk'] as $produk){
+        $result = query("SELECT * FROM `produk` WHERE kategori = 'whatsapp' ORDER BY harga ASC ");
+        while($data = mysqli_fetch_assoc($result)){
       ?>
       <div class="col-sm-12 col-md-6 col-lg-4">
         <div class="card">
           <div class="card-body text-center pt-4">
             <i class="fa-brands fa-whatsapp fa-3x text-center"></i>
-            <h5 class="card-title text-center" style="padding-bottom:5px"><?= $produk['nama_produk'] ?></h5>
-            <h5><span class="badge bg-success"><?= $produk['harga'] ?></span></h5>
+            <h5 class="card-title text-center" style="padding-bottom:5px"><?= $data['nama'] ?></h5>
+            <h5><span class="badge bg-success"><?= rupiah($data['harga']); ?></span></h5>
             <hr style="margin-top:5px; margin-bottom:5px">
             <ul style="list-style-type: none; padding-left: 0; margin-top:20px">
               <?php
-              for($i=0; $i < count($produk['syarat']['berlaku']); $i++){
+              $data_sk = json_decode($data['sk_terima'], true);
+              foreach($data_sk as $sk){
                 ?>
-                <li><i class="fa-solid fa-check" style="color: #0fd23f;"></i> <?= $produk['syarat']['berlaku'][$i] ?></li>
+                <li><i class="fa-solid fa-check" style="color: #0fd23f;"></i> <?= $sk ?></li>
                 <?php
               }
-              for($i=0; $i < count($produk['syarat']['tidak berlaku']); $i++){
-                ?>
-                <li><i class="fa-solid fa-xmark" style="color: #df2046;"></i> <?= $produk['syarat']['tidak berlaku'][$i] ?></li>
-                <?php
+              $data_sk = json_decode($data['sk_tolak'], true);
+              foreach($data_sk as $sk){
+                if($sk != ''){
+                  ?>
+                  <li><i class="fa-solid fa-xmark" style="color: #df2046;"></i> <?= $sk ?></li>
+                  <?php
+                }
               }
               ?>
             </ul>
