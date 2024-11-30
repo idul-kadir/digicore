@@ -28,3 +28,21 @@ if(isset($_POST['tambah-produk'])){
     echo 'error|Kode sudah ada dalam database';
   }
 }
+
+if(isset($_POST['tambah-saldo'])){
+  $client = bersihkan($_POST['client']);
+  $jumlah = bersihkan($_POST['saldo']);
+  $pengguna = pengguna($client);
+  $cek = query("SELECT * FROM `user` WHERE id = '$client' ");
+  if(mysqli_num_rows($cek)>0){
+    $top_up = $pengguna['saldo'] + $jumlah;
+    $result = query("UPDATE `user` SET `saldo`='$top_up' WHERE id = '$client' ");
+    if($result){
+      echo 'success|Top up berhasil dilakukan';
+    }else{
+      echo 'error|Top up gagal dilakukan';
+    }
+  }else{
+    echo 'error|User tidak terdaftar';
+  }
+}

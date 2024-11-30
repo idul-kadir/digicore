@@ -58,7 +58,7 @@ if($b_server2['status'] == 'connected'){
         <div class="card-body">
           <p>Lokasi server : Indonesia - LABKOM 2</p>
           <p>Terakhir dipantau <?= tgl_indo(date('Y-m-d', $b_server2['timestamp'])).' Pukul <span class="badge bg-dark">'. date('H:i:s', $b_server2['timestamp']).'</span>' ?></p>
-          <p>Nomor : +6287840189270</p>
+          <a href="https://backup.digicore.web.id/start-session?session=server1&scan=true" target="_blank">Backup 1</a> | <a href="https://backup.digicore.web.id/start-session?session=server2&scan=true" target="_blank">Backup 2</a>
         </div>
       </div>
     </div>

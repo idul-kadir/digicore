@@ -4,7 +4,8 @@ if(!isset($_SESSION['id'])){
   header("location:login");
   exit;
 }
-
+require 'function.php';
+$id = $_SESSION['id'];
 if(!isset($_SESSION['halaman'])){
   $_SESSION['halaman'] = 'beranda';
 }
@@ -63,8 +64,7 @@ if(!isset($_SESSION['halaman'])){
         <li class="nav-item dropdown pe-3">
 
           <a class="nav-link nav-profile d-flex align-items-center pe-0" href="#" data-bs-toggle="dropdown">
-            <img src="assets/img/logo.png" alt="Profile" class="rounded-circle">
-            <span class="d-none d-md-block ps-2">K. Anderson</span>
+           <span class="d-none d-md-block ps-2" style="font-size:19px"><span class="badge bg-success">Saldo : <?= rupiah(pengguna($id)['saldo']); ?></span></span>
           </a><!-- End Profile Iamge Icon -->
 
         </li><!-- End Profile Nav -->
@@ -167,6 +167,7 @@ if(!isset($_SESSION['halaman'])){
   <script src="assets/vendor/simple-datatables/simple-datatables.js"></script>
   <script src="assets/vendor/tinymce/tinymce.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!-- Template Main JS File -->
   <script src="assets/js/main.js"></script>

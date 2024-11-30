@@ -100,5 +100,75 @@ function format_nomor($nomor){
 }
 
 function rupiah($angka) {
+  if($angka > 0){
     return "Rp " . number_format($angka, 0, ',', '.');
+  }else{
+    return "Rp 0";
+  }
+}
+
+function pengguna($id){
+  $id = bersihkan($id);
+  $cari = query("SELECT * FROM `user` WHERE id = '$id' ");
+  if(mysqli_num_rows($cari)>0){
+    $data = mysqli_fetch_assoc($cari);
+    $result = ["nama" => $data['nama'], "wa" => $data['wa'], "saldo" => $data['saldo']];
+  }else{
+    $result = ["nama" => "-", "wa" => "-", "saldo" => 0];
+  }
+  return $result;
+}
+
+function buat_apikey($length = 32) {
+    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    $charactersLength = strlen($characters);
+    $randomString = '';
+
+    // Membuat string acak
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, $charactersLength - 1)];
+    }
+
+    // Menambahkan microtime untuk keunikan ekstra
+    $microTime = round(microtime(true) * 1000); // Waktu dalam milidetik
+    return $randomString . $microTime;
+}
+
+function produk($kode){
+  $kode = bersihkan($kode);
+  $cari = query("SELECT * FROM `produk` WHERE kode = '$kode' ");
+  if(mysqli_num_rows($cari)>0){
+    $data = mysqli_fetch_assoc($cari);
+    $result = ["nama" => $data['nama'], "kategori" => $data['kategori'], "harga" => $data['harga'], "status" => $data['status']];
+  }else{
+    $result = ["nama" =>"-", "kategori" => "-", "harga" => "-", "status" => "-"];
+  }
+  return $result;
+}
+
+function saldo($id_client,$keterangan,$jumlah){
+  $cek_client = query("SELECT * FROM `user` WHERE id = '$id_client' ");
+  if(mysqli_num_rows($cek_client)>0){
+    if($keterangan == 'tambah'){
+      $pengguna = pengguna($id_client);
+      $saldo_akhir = $pengguna['saldo'] + $jumlah;
+      $result = query("UPDATE `user` SET `saldo`='$saldo_akhir' WHERE id = '$id_client' ");
+      if($result){
+        return true;
+      }else{
+        return false;
+      }
+    }else{
+      $pengguna = pengguna($id_client);
+      $saldo_akhir = $pengguna['saldo'] - $jumlah;
+      $result = query("UPDATE `user` SET `saldo`='$saldo_akhir' WHERE id = '$id_client' ");
+      if($result){
+        return true;
+      }else{
+        return false;
+      }
+    }
+  }else{
+    return false;
+  }
 }

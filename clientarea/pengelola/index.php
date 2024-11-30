@@ -69,15 +69,60 @@ require '../function.php';
           <center><h4>Layanan</h4></center>
           <div class="row mt-4">
           <?php
-          for($i=0; $i<11; $i++){
+          $list_tabel = ['l_whatsapp'];
+          $result = [];
+          for($i=0; $i<count($list_tabel); $i++){
+            $tabel = $list_tabel[$i];
+            $list_layanan = query("SELECT * FROM `$tabel` ");
+            while($data = mysqli_fetch_assoc($list_layanan)){
+              $aktivasi = tgl_indo(date('Y-m-d', $data['id'])).' '.date('H:i:s', $data['id']);
+              $result[] = ["id" => $data['id'],"waktu_aktifasi" => $aktivasi, "produk" => $data['kode_produk'], "user" => pengguna($data['id_user'])['nama'], "Perpanjang Otomatis" => $data['perpanjang'], "expired" => tgl_indo($data['tgl_expired']), "Status" => $data['status']];
+            }
+          }
+          usort($result, function($a,$b){
+            return $b['id'] - $a['id'];
+          });
+          foreach($result as $data){
           ?>
             <div class="col-sm-12 col-md-6 col-lg-4 mb-2">
               <div class="card">
-                <h5 class="card-header">Featured</h5>
+                <h5 class="card-header"><?= produk($data['produk'])['nama'] ?></h5>
                 <div class="card-body">
-                  <h5 class="card-title">Special title treatment</h5>
-                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                  <table>
+                    <tr>
+                      <td>User</td>
+                      <td style="width:20px; text-align:center">:</td>
+                      <td><?= $data['user']; ?></td>
+                    </tr>
+                    <tr>
+                      <td>Kategori</td>
+                      <td style="width:20px; text-align:center">:</td>
+                      <td><?= produk($data['produk'])['kategori'] ?></td>
+                    </tr>
+                    <tr>
+                      <td>Otomatis</td>
+                      <td style="width:20px; text-align:center">:</td>
+                      <td><?= $data['Perpanjang Otomatis'] ?></td>
+                    </tr>
+                    <tr>
+                      <td>Kadaluarsa</td>
+                      <td style="width:20px; text-align:center">:</td>
+                      <td><?= $data['expired'] ?></td>
+                    </tr>
+                    <tr>
+                      <td>Status</td>
+                      <td style="width:20px; text-align:center">:</td>
+                      <td>
+                        <?php 
+                          if($data['Status'] == 'aktif'){
+                            echo '<span class="badge bg-success">Aktif</span>';
+                          }else{
+                            echo '<span class="badge bg-error">Tidak aktif</span>';
+                          }
+                        ?>
+                      </td>
+                    </tr>
+                  </table>
                 </div>
               </div>
             </div>
@@ -94,29 +139,21 @@ require '../function.php';
                   <tr>
                     <th scope="col">#</th>
                     <th scope="col">Nama</th>
-                    <th scope="col">Expired</th>
-                    <th scope="col">Status</th>
+                    <th scope="col">No WA</th>
+                    <th scope="col">Saldo</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php
                   $no = 1;
-                  $result = json_decode(file_get_contents("https://api.digicore.web.id/get-client"), true);
-                  foreach($result['data'] as $data){
+                  $result = query("SELECT * FROM `user`");
+                  foreach($result as $data){
                   ?>
                   <tr>
                     <th scope="row"><?= $no++; ?></th>
                     <td><?= $data['nama'] ?></td>
-                    <td><?= $data['kadaluarsa'] ?></td>
-                    <td>
-                      <?php
-                      if($data['status'] == 'aktif'){
-                        echo '<span class="badge rounded-pill bg-success">Aktif</span>';
-                      }else{
-                        echo '<span class="badge rounded-pill bg-danger">Kadaluarsa</span>';
-                      }
-                      ?>
-                    </td>
+                    <td><?= $data['wa'] ?></td>
+                    <td><span class="badge rounded-pill bg-success"><?= rupiah($data['saldo']) ?></span></td>
                   </tr>
                   <?php } ?>
                 </tbody>
@@ -127,21 +164,26 @@ require '../function.php';
           <div class="card mt-2">
             <h5 class="card-header">Tambah Saldo</h5>
             <div class="card-body">
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Client</label>
-                <select class="form-select" aria-label="Default select example">
-                  <option selected value="">Pilih Client</option>
-                  <?php
-                  foreach($result['data'] as $data){
-                  ?>
-                  <option value="<?= $data['id'] ?>"><?= $data['nama'] ?></option>
-                  <?php } ?>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label for="exampleInputEmail1" class="form-label">Email address</label>
-                <input type="number" class="form-control" id="saldo">
-              </div>
+              <form action="#" id="tambah-saldo">
+                <div class="mb-3">
+                  <label for="exampleInputEmail1" class="form-label">Client</label>
+                  <select class="form-select" id="calon-client" name="client" aria-label="Default select example" required>
+                    <option selected value="">Pilih Client</option>
+                    <?php
+                    foreach($result as $data){
+                    ?>
+                    <option value="<?= $data['id'] ?>"><?= $data['nama'] ?></option>
+                    <?php } ?>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="saldo" class="form-label">Jumlah Saldo</label>
+                  <input type="number" class="form-control" id="saldo" name="saldo" required>
+                </div>
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary" type="submit" id="tbl-tambah-saldo"><i class="fa-solid fa-money-bill-transfer"></i> Tambah Saldo</button>
+                </div>
+              </form>
             </div>
           </div>
 
@@ -239,6 +281,32 @@ require '../function.php';
               setTimeout(() => {
                 $('#modal-tambah-produk').modal('hide');
               }, 2600);
+              setTimeout(() => {
+                location.reload()
+              }, 2800);
+            }
+          })
+        })
+
+        $('#tambah-saldo').submit(function(e){
+          e.preventDefault();
+          let data = $(this).serialize();
+          let tbl = $('#tbl-tambah-saldo');
+          let label = tbl.html();
+          tbl.attr('disabled','disabled');
+          tbl.html('Proses top up...');
+          $.post('proses.php','tambah-saldo=true&'+data, function(respon){
+            let pecah = respon.split('|');
+            Swal.fire({
+              position: "center",
+              icon: pecah[0],
+              title: pecah[1],
+              showConfirmButton: false,
+              timer: 2500
+            });
+            tbl.removeAttr('disabled');
+            tbl.html(label)
+            if(pecah[0] == 'success'){
               setTimeout(() => {
                 location.reload()
               }, 2800);

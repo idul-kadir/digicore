@@ -18,6 +18,7 @@ SetEnv USER_DB root
 SetEnv PASS_DB 
 SetEnv DB digicore
 SetEnv HOST localhost
+SetEnv ENDPOINT "https://api.digicore.web.id/send-message"
 
 RewriteRule ^login-pengguna login/index.php [L]
 RewriteRule ^beranda$ hal-beranda.php [L]
@@ -25,3 +26,4 @@ RewriteRule ^whatsapp$ hal-whatsapp.php [L]
 RewriteRule ^admin$ pengelola/index.php [L]
 RewriteRule ^config$ function.php [L]
 RewriteRule ^user$ index.php [L]
+RewriteRule ^proses-data mengolah-data.php [L]
