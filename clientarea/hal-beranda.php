@@ -1,5 +1,11 @@
 <?php
 session_start();
+require 'function.php';
+if(!isset($_SESSION['id'])){
+  echo 'Silahkan keluar dan login lagi';
+  exit;
+}
+$id = $_SESSION['id'];
 $_SESSION['halaman'] = 'beranda';
 ?>
 <div class="pagetitle">
@@ -31,7 +37,7 @@ $_SESSION['halaman'] = 'beranda';
                   <i class="fa-solid fa-rupiah-sign"></i>
                 </div>
                 <div class="ps-3">
-                  <h6>145.000</h6>
+                  <h6><?= str_replace('Rp ','',rupiah(pengguna($id)['saldo'])); ?></h6>
                 </div>
               </div>
             </div>

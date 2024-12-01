@@ -23,6 +23,9 @@ SetEnv ENDPOINT "https://api.digicore.web.id/send-message"
 RewriteRule ^login-pengguna login/index.php [L]
 RewriteRule ^beranda$ hal-beranda.php [L]
 RewriteRule ^whatsapp$ hal-whatsapp.php [L]
+RewriteRule ^vpn$ hal-vpn.php [L]
+RewriteRule ^hosting$ hal-hosting.php [L]
+
 RewriteRule ^admin$ pengelola/index.php [L]
 RewriteRule ^config$ function.php [L]
 RewriteRule ^user$ index.php [L]

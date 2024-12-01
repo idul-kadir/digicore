@@ -162,6 +162,35 @@ require '../function.php';
           </div>
 
           <div class="card mt-2">
+            <h5 class="card-header text-white bg-dark">Tambah Konektor <i class="fa-solid fa-plug"></i></h5>
+            <div class="card-body">
+              <form action="" id="tambah-konektor">
+                <div class="mb-3">
+                  <label for="jenis-konektor" class="form-label">Jenis Konektor</label>
+                  <select class="form-select" aria-label="Default select example" name="jenis-konektor" id="jenis-konektor" required>
+                    <option selected value="">Pilih jenis konektor</option>
+                    <option value="Wireguard">Wireguard</option>
+                    <option value="Open VPN">Open VPN</option>
+                    <option value="L2TP/IPSec">L2TP/IPSec</option>
+                    <option value="PPTP">PPTP</option>
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="file-config" class="form-label">Unggah file konfig</label>
+                  <input class="form-control" type="file" id="file-config" name="file-konfig">
+                </div>
+                <div class="mb-3">
+                  <label for="ip-konektor" class="form-label">IP Address</label>
+                  <input type="text" class="form-control" id="ip-konektor" name="ip" placeholder="10.66.66.100">
+                </div>
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary" type="submit" id="tbl-tambah-konektor">Tambah Konektor</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="card mt-2">
             <h5 class="card-header">Tambah Saldo</h5>
             <div class="card-body">
               <form action="#" id="tambah-saldo">
@@ -288,6 +317,19 @@ require '../function.php';
           })
         })
 
+        $('#jenis-konektor').change(function(){
+          let tipe = $(this).val();
+          if(tipe == 'Wireguard' || tipe == 'Open VPN'){
+            $('#file-config').removeAttr('disabled');
+            $('#file-config').attr('required', true);
+            $('#ip-konektor').attr('readonly', true);
+          }else{
+            $('#file-config').attr('disabled', true);
+            $('#file-config').removeAttr('required');
+            $('#ip-konektor').removeAttr('readonly');
+          }
+        })
+
         $('#tambah-saldo').submit(function(e){
           e.preventDefault();
           let data = $(this).serialize();
@@ -310,6 +352,75 @@ require '../function.php';
               setTimeout(() => {
                 location.reload()
               }, 2800);
+            }
+          })
+        })
+
+        $('#file-config').change(function(){
+          let tipeKonektor = $('#jenis-konektor').val();
+          let fileKonfig = $(this).prop('files')[0];
+          if(tipeKonektor == ''){
+            Swal.fire({
+              title: "Oppss!!",
+              text: "Pilih dulu jenis konektor",
+              icon: "warning"
+            });
+          }
+          else{
+            $('#ip-konektor').val('');
+            let data = new FormData();
+            data.append('cek-ip', true);
+            data.append('tipe-konektor', tipeKonektor);
+            data.append('file', fileKonfig);
+            $.ajax({
+              beforeSend: function(){
+                $('#ip-konektor').val('Mendeteksi IP VPN....');
+                $('#tbl-tambah-konektor').attr('disabled', true);
+              },
+              url: 'proses.php',
+              data: data,
+              type: 'post',
+              contentType: false,
+              processData: false,
+              success: function(respon){
+                $('#ip-konektor').val(respon)
+                $('#tbl-tambah-konektor').removeAttr('disabled');
+              }
+            })
+          }
+        })
+
+        $('#tambah-konektor').submit(function(e){
+          e.preventDefault();
+          let data = new FormData(this);
+          data.append('tambah-konektor', true);
+          $.ajax({
+            beforeSend : function(){
+              $('#tbl-tambah-konektor').attr('disabled', true);
+              $('#tbl-tambah-konektor').text('Menambahkan Konektor...');
+            },
+            url: 'proses.php',
+            data: data,
+            type: 'post',
+            contentType: false,
+            processData: false,
+            success: function(respon){
+              let pecah = respon.split('|');
+              Swal.fire({
+                position: "center",
+                icon: pecah[0],
+                title: pecah[1],
+                showConfirmButton: false,
+                timer: 2500
+              });
+              if(pecah[0] == 'success'){
+                setTimeout(() => {
+                  location.reload();
+                }, 2700);
+              }else{
+                $('#tbl-tambah-konektor').removeAttr('disabled');
+                $('#tbl-tambah-konektor').text('Tambah Konektor');
+              }
             }
           })
         })

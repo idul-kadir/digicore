@@ -103,7 +103,7 @@ if(!isset($_SESSION['halaman'])){
       </li><!-- End F.A.Q Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="vpn-tunnel">
+        <a class="nav-link collapsed" href="vpn">
           <i class="fa-solid fa-diagram-project"></i>
           <span>VPN Tunnel</span>
         </a>
