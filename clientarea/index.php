@@ -110,7 +110,7 @@ if(!isset($_SESSION['halaman'])){
       </li><!-- End Contact Page Nav -->
 
       <li class="nav-item">
-        <a class="nav-link collapsed" href="ip-public">
+        <a class="nav-link collapsed" href="ippublic">
           <i class="fa-solid fa-globe"></i>
           <span>IP Public</span>
         </a>
