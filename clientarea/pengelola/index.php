@@ -364,7 +364,7 @@ require '../function.php';
 
         $('#jenis-konektor').change(function(){
           let tipe = $(this).val();
-          if(tipe == 'Wireguard' || tipe == 'Open VPN'){
+          if(tipe == 'Wireguard'){
             $('#file-config').removeAttr('disabled');
             $('#file-config').attr('required', true);
             $('#ip-konektor').attr('readonly', true);
