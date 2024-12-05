@@ -71,6 +71,8 @@ if(isset($_POST['cek-ip'])){
       }
     }
     echo $ip;
+  }else{
+    
   }
 }
 

@@ -20,6 +20,10 @@ SetEnv DB digicore
 SetEnv HOST localhost
 SetEnv ENDPOINT "https://api.digicore.web.id/send-message"
 
+SetEnv USER_CHR api
+SetEnv PASS_CHR abangbentOR12345@@
+SetEnv IP_CHR vpn.digicore.web.id
+
 RewriteRule ^login-pengguna login/index.php [L]
 RewriteRule ^beranda$ hal-beranda.php [L]
 RewriteRule ^whatsapp$ hal-whatsapp.php [L]

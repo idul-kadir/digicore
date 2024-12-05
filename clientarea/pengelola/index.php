@@ -128,6 +128,50 @@ require '../function.php';
             </div>
           <?php } ?>
           </div>
+
+          <hr>
+          <center>
+            <h4>Konektor VPN</h4>
+          </center>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">IP Address</th>
+                <th scope="col">Jenis</th>
+                <th scope="col">Status</th>
+                <th scope="col">Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+              $nomor = 1;
+              $result = query("SELECT * FROM `connector`");
+              while($data = mysqli_fetch_assoc($result)){
+              ?>
+              <tr>
+                <th scope="row"><?= $nomor++; ?></th>
+                <td><?= $data['ip'] ?></td>
+                <td><a href="<?= '../'.$data['config'] ?>" target="_blank"><?= $data['jenis'] ?></a></td>
+                <td>
+                  <?php
+                  if($data['status'] == 'tidak aktif'){
+                    echo '<span class="badge bg-primary">Belum Terpakai</span>';
+                  }elseif($data['status'] == 'aktif'){
+                    echo '<span class="badge bg-success">Aktif</span>';
+                  }else{
+                    echo '<span class="badge bg-warning">Terpakai</span>';
+                  }
+                  ?>
+                </td>
+                <td>
+                  <button type="button" class="btn btn-warning btn-sm"><i class="fa-solid fa-pen-to-square"></i></button>
+                  <button type="button" class="btn btn-danger btn-sm"><i class="fa-solid fa-trash"></i></button>
+                </td>
+              </tr>
+              <?php } ?>
+            </tbody>
+          </table>
         </div>
         <div class="col-sm-12 col-md-4 col-lg-4">
 
@@ -173,6 +217,7 @@ require '../function.php';
                     <option value="Open VPN">Open VPN</option>
                     <option value="L2TP/IPSec">L2TP/IPSec</option>
                     <option value="PPTP">PPTP</option>
+                    <option value="ANY">ANY</option>
                   </select>
                 </div>
                 <div class="mb-3">

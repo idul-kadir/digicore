@@ -1,4 +1,5 @@
 <?php
+include('assets/vendor/api-mikrotik/routeros_api.class.php');
 date_default_timezone_set('Asia/Makassar');
 $koneksi = mysqli_connect($_SERVER['HOST'], $_SERVER['USER_DB'], $_SERVER['PASS_DB'], $_SERVER['DB']);
 
@@ -171,4 +172,9 @@ function saldo($id_client,$keterangan,$jumlah){
   }else{
     return false;
   }
+}
+
+function tambah_user_vpn($jenis){
+  $waktu = time();
+  
 }
