@@ -59,7 +59,9 @@ if(isset($_POST['checkout'])){
           if($cek){
             status_konektor($konektor1,'aktif');
             status_konektor($konektor1,'aktif');
+            echo 'success|oke';
           }
+          echo 'success|tunnel';
         break;
 
       }

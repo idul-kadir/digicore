@@ -192,12 +192,17 @@ function get_konektor($jenis){
 function status_konektor($id,$status){
   query("UPDATE `connector` SET `status`='$status' WHERE id='$id' ");
   $cek = query("SELECT * FROM `connector` WHERE id='$id' ");
+  $data = mysqli_fetch_assoc($cek);
+  if($status == 'aktif'){
+    if($data['jenis'] != 'Wireguard'){
+      $API->comm('/ppp/secret/add', [
+        'name' => $data['catatan'],   // Nama pengguna untuk secret
+        'password' => $data['catatan'], // Kata sandi untuk secret
+        'service' => strtolower($data['jenis']),        // Jenis layanan (pptp, l2tp, ovpn, dll.)
+        'profile' => 'VPN-TUNNEL',      // Profil pengguna (opsional)
+        'comment' => tgl_indo(date('Y-m-d')).' - '. date('H:i:s'),       // Komentar untuk akun
+        'remote-address' => $data['ip']
+      ]);
+    }
+  }
 }
-
-$API->comm('/ppp/secret/add', [
-        'name' => $usernameSecret,   // Nama pengguna untuk secret
-        'password' => $passwordSecret, // Kata sandi untuk secret
-        'service' => 'pptp',        // Jenis layanan (pptp, l2tp, ovpn, dll.)
-        'profile' => $profile,      // Profil pengguna (opsional)
-        'comment' => $comment       // Komentar untuk akun
-    ]);
