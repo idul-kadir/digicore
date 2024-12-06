@@ -57,9 +57,10 @@ if(isset($_POST['checkout'])){
           $kadaluarsa = date('Y-m-d', strtotime("+$berlaku days"));
           $cek = query("INSERT INTO `l_vpn`(`id`, `kode_produk`, `id_user`, `konektor1`, `konektor2`, `tgl_expired`, `perpanjang`, `status`) VALUES ('$id_layanan','$kode','$id','$konektor1','$konektor2','$kadaluarsa','$perpanjang','aktif')");
           if($cek){
-            status_konektor($konektor1,'aktif');
-            status_konektor($konektor1,'aktif');
-            echo 'success|oke';
+            // status_konektor($konektor2,'aktif');
+           $status = status_konektor($konektor2,'aktif');
+            echo 'success|'.$status;
+            exit;
           }
           echo 'success|tunnel';
         break;

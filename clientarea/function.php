@@ -1,6 +1,7 @@
 <?php
 include('assets/vendor/api-mikrotik/routeros_api.class.php');
 date_default_timezone_set('Asia/Makassar');
+
 $koneksi = mysqli_connect($_SERVER['HOST'], $_SERVER['USER_DB'], $_SERVER['PASS_DB'], $_SERVER['DB']);
 
 function query($sql){
@@ -190,19 +191,58 @@ function get_konektor($jenis){
 }
 
 function status_konektor($id,$status){
+  $API = new RouterosAPI();
   query("UPDATE `connector` SET `status`='$status' WHERE id='$id' ");
   $cek = query("SELECT * FROM `connector` WHERE id='$id' ");
   $data = mysqli_fetch_assoc($cek);
   if($status == 'aktif'){
     if($data['jenis'] != 'Wireguard'){
-      $API->comm('/ppp/secret/add', [
-        'name' => $data['catatan'],   // Nama pengguna untuk secret
-        'password' => $data['catatan'], // Kata sandi untuk secret
-        'service' => strtolower($data['jenis']),        // Jenis layanan (pptp, l2tp, ovpn, dll.)
-        'profile' => 'VPN-TUNNEL',      // Profil pengguna (opsional)
-        'comment' => tgl_indo(date('Y-m-d')).' - '. date('H:i:s'),       // Komentar untuk akun
-        'remote-address' => $data['ip']
-      ]);
+      buat_akun($data['catatan'],$data['catatan'],strtolower($data['jenis']),$data['ip']);
     }
   }
+}
+
+function buat_akun($nama,$pass,$servis,$ip){
+  // Membuat objek API
+  $API = new RouterosAPI();
+
+  // Tentukan batas maksimum percobaan (misalnya, 5 kali percobaan)
+  $max_retries = 5;
+  $attempt = 0;
+  $connected = false;
+
+  while (!$connected && $attempt < $max_retries) {
+    // Menghubungkan ke MikroTik
+    if ($API->connect($_SERVER['IP_CHR'], $_SERVER['USER_CHR'], $_SERVER['PASS_CHR'])) {
+      $connected = true;  // Jika berhasil, set connected ke true
+      try {
+        // Menjalankan perintah untuk menambahkan PPP secret
+        $API->comm('/ppp/secret/add', [
+          'name' => $nama,
+          'password' => $pass,
+          'service' => $servis,
+          'profile' => 'VPN-TUNNEL',
+          'comment' => '6 Desember 2024 pukul '.date('H:i:s'),
+          'remote-address' => $ip
+        ]);
+      } catch (Exception $e) {
+        // Tangani error dengan mencatat atau memberi pesan kesalahan
+        $result = "Error: " . $e->getMessage();
+      }
+      // Disconnect setelah perintah dijalankan
+      $API->disconnect();
+    } else {
+      $attempt++;  // Increment percobaan
+      echo "Gagal menghubungkan ke MikroTik. Percobaan ke-$attempt...\n";
+      if ($attempt < $max_retries) {
+        // Tunggu 10 detik sebelum mencoba lagi
+        sleep(10);
+      }
+    }
+  }
+
+  if (!$connected) {
+    echo "Gagal menghubungkan setelah $max_retries percobaan.\n";
+  }
+    
 }
