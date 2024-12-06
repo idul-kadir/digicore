@@ -30,19 +30,40 @@ if(isset($_POST['checkout'])){
     $data = mysqli_fetch_assoc($cek_produk);
     if(pengguna($id)['saldo'] >= $data['harga']){
       $id_layanan = time();
-      $api_key = buat_apikey();
-      $kadaluarsa = date('Y-m-d', strtotime("+1 month"));
+      $kategori = $data['kategori'];
+      switch($kategori){
 
-      $saldo = saldo($id,'kurang',$data['harga']);
-      if($saldo == true){
-        $cek = query("INSERT INTO `l_whatsapp`(`id`, `kode_produk`, `id_user`, `apikey`, `tgl_expired`, `perpanjang`, `status`) VALUES ('$id_layanan','$kode','$id','$api_key','$kadaluarsa','$perpanjang','aktif')");
-        if($cek){
-          echo 'success|Layanan '.$data['nama'].' berhasil diaktifkan';
-        }else{
-          echo 'error|GAGAL memesan layanan';
-        }
-      }else{
-        echo 'error|Sistem maintenance';
+        case 'Whatsapp':
+          $api_key = buat_apikey();
+          $kadaluarsa = date('Y-m-d', strtotime("+1 month"));
+    
+          $saldo = saldo($id,'kurang',$data['harga']);
+          if($saldo == true){
+            $cek = query("INSERT INTO `l_whatsapp`(`id`, `kode_produk`, `id_user`, `apikey`, `tgl_expired`, `perpanjang`, `status`) VALUES ('$id_layanan','$kode','$id','$api_key','$kadaluarsa','$perpanjang','aktif')");
+            if($cek){
+              echo 'success|Layanan '.$data['nama'].' berhasil diaktifkan';
+            }else{
+              echo 'error|GAGAL memesan layanan';
+            }
+          }else{
+            echo 'error|Sistem maintenance';
+          }
+        break;
+
+        case 'VPN Tunnel':
+          $konektor1 = get_konektor('Wireguard');
+          $konektor2 = get_konektor('ANY');
+          $berlaku = $data['masa_berlaku'];
+          $kadaluarsa = date('Y-m-d', strtotime("+$berlaku days"));
+          $cek = query("INSERT INTO `l_vpn`(`id`, `kode_produk`, `id_user`, `konektor1`, `konektor2`, `tgl_expired`, `perpanjang`, `status`) VALUES ('$id_layanan','$kode','$id','$konektor1','$konektor2','$kadaluarsa','$perpanjang','aktif')");
+          if($cek){
+            status_konektor($konektor1,'aktif');
+            status_konektor($konektor1,'aktif');
+            echo 'success|oke';
+          }
+          echo 'success|tunnel';
+        break;
+
       }
 
     }else{

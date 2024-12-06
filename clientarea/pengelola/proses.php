@@ -81,6 +81,7 @@ if(isset($_POST['tambah-konektor'])){
   $ip = bersihkan($_POST['ip']);
   $file_konfig = '';
   $id = time();
+  $catatan = '';
 
   $cek_ip = query("SELECT * FROM `connector` WHERE ip = '$ip' ");
   if(mysqli_num_rows($cek_ip)<1){
@@ -96,7 +97,10 @@ if(isset($_POST['tambah-konektor'])){
         }
       }
     }
-    $cek = query("INSERT INTO `connector`(`id`, `jenis`, `ip`, `config`, `status`) VALUES ('$id','$jenis','$ip','$file_konfig','tidak aktif')");
+    if($jenis != 'Wireguard'){
+      $catatan = substr(microtime(true) * 10000, -4);
+    }
+    $cek = query("INSERT INTO `connector`(`id`, `jenis`, `ip`, `config`, `status`, `catatan`) VALUES ('$id','$jenis','$ip','$file_konfig','tidak aktif','$catatan')");
     if($cek){
       echo 'success|Konektor berhasil ditambahkan';
     }else{

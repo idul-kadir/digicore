@@ -178,3 +178,31 @@ function tambah_user_vpn($jenis){
   $waktu = time();
   
 }
+
+function get_konektor($jenis){
+  $result = '';
+  $cari = query("SELECT * FROM `connector` WHERE jenis = '$jenis' AND `status` = 'tidak aktif' ORDER BY id ASC LIMIT 1 ");
+  if(mysqli_num_rows($cari)>0){
+    $data = mysqli_fetch_assoc($cari);
+    $result = $data['id'];
+  }
+  return $result;
+}
+
+function status_konektor($id,$status){
+  query("UPDATE `connector` SET `status`='$status' WHERE id='$id' ");
+  $cek = query("SELECT * FROM `connector` WHERE id='$id' ");
+  $data = mysqli_fetch_assoc($cek);
+  if($status == 'aktif'){
+    if($data['jenis'] != 'Wireguard'){
+      $API->comm('/ppp/secret/add', [
+        'name' => $data['catatan'],   // Nama pengguna untuk secret
+        'password' => $data['catatan'], // Kata sandi untuk secret
+        'service' => strtolower($data['jenis']),        // Jenis layanan (pptp, l2tp, ovpn, dll.)
+        'profile' => 'VPN-TUNNEL',      // Profil pengguna (opsional)
+        'comment' => tgl_indo(date('Y-m-d')).' - '. date('H:i:s'),       // Komentar untuk akun
+        'remote-address' => $data['ip']
+      ]);
+    }
+  }
+}
