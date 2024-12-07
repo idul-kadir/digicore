@@ -38,7 +38,7 @@ require '../function.php';
 
           <center><h4>Produk</h4></center>
           <button type="button" class="btn btn-primary btn-sm mb-1" data-bs-toggle="modal" data-bs-target="#modal-tambah-produk">Tambah Produk</button>
-          <table class="table" id="produk">
+          <table class="table table-data" id="produk">
             <thead>
               <tr class="table-dark">
                 <th scope="col" width="25px">#</th>
@@ -133,7 +133,7 @@ require '../function.php';
           <center>
             <h4>Konektor VPN</h4>
           </center>
-          <table class="table">
+          <table class="table table-data">
             <thead>
               <tr>
                 <th scope="col">#</th>
@@ -205,6 +205,15 @@ require '../function.php';
             </div>
           </div>
 
+          <?php
+          $dasar_ip = '128.44.56.';
+          $client = 2;
+          do{
+            $ip = $dasar_ip.$client;
+            $cek_ip = query("SELECT * FROM `connector` WHERE ip = '$ip' ");
+            $client++;
+          }while(mysqli_num_rows($cek_ip)>0);
+          ?>
           <div class="card mt-2">
             <h5 class="card-header text-white bg-dark">Tambah Konektor <i class="fa-solid fa-plug"></i></h5>
             <div class="card-body">
@@ -214,8 +223,8 @@ require '../function.php';
                   <select class="form-select" aria-label="Default select example" name="jenis-konektor" id="jenis-konektor" required>
                     <option selected value="">Pilih jenis konektor</option>
                     <option value="Wireguard">Wireguard</option>
-                    <option value="Open VPN">Open VPN</option>
-                    <option value="L2TP/IPSec">L2TP/IPSec</option>
+                    <option value="OVPN">Open VPN</option>
+                    <option value="L2TP">L2TP/IPSec</option>
                     <option value="PPTP">PPTP</option>
                     <option value="ANY">ANY</option>
                   </select>
@@ -226,7 +235,7 @@ require '../function.php';
                 </div>
                 <div class="mb-3">
                   <label for="ip-konektor" class="form-label">IP Address</label>
-                  <input type="text" class="form-control" id="ip-konektor" name="ip" placeholder="10.66.66.100">
+                  <input type="text" class="form-control" id="ip-konektor" name="ip" placeholder="10.66.66.100" data-ip="<?= $ip ?>" value="<?= $ip ?>" readonly>
                 </div>
                 <div class="d-grid gap-2">
                   <button class="btn btn-primary" type="submit" id="tbl-tambah-konektor">Tambah Konektor</button>
@@ -328,7 +337,7 @@ require '../function.php';
     <script>
       $(document).ready(function(){
 
-        new DataTable('#produk');
+        new DataTable('table.table-data');
 
         $('#panel-koneksi').load('panel-koneksi.php');
         setInterval(() => {
@@ -364,14 +373,14 @@ require '../function.php';
 
         $('#jenis-konektor').change(function(){
           let tipe = $(this).val();
+          let dataIp = $('#ip-konektor').attr('data-ip');
           if(tipe == 'Wireguard'){
             $('#file-config').removeAttr('disabled');
             $('#file-config').attr('required', true);
-            $('#ip-konektor').attr('readonly', true);
           }else{
             $('#file-config').attr('disabled', true);
             $('#file-config').removeAttr('required');
-            $('#ip-konektor').removeAttr('readonly');
+            $('#ip-konektor').val(dataIp);
           }
         })
 

@@ -19,7 +19,108 @@ require 'function.php';
   }
 </style>
 <div class="row">
-  <div class="col-sm-12 col-md-6"></div>
+  <div class="col-sm-12 col-md-6">
+    <?php
+    $list_vpn = query("SELECT * FROM `l_vpn` WHERE id_user = '$id' ");
+    while($data=mysqli_fetch_assoc($list_vpn)){
+      $produk = produk($data['kode_produk']);
+      $konektor1 = detail_connector($data['konektor1']);
+      $konektor2 = detail_connector($data['konektor2']);
+    ?>
+    <div class="card">
+      <h6 class="card-header text-white bg-primary"><?= $produk['nama'] ?></h6>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-12 col-lg-7">
+            <?php
+            $id_vpn = $data['id'];
+            $list_vpn = query("SELECT * FROM `tunnel` WHERE id_vpn = '$id_vpn' ");
+            $pecah = explode(' ',$produk['nama']);
+            for($i=0; $i<$pecah[1]; $i++){
+              $vpn = mysqli_fetch_assoc($list_vpn);
+              if($vpn){
+                $dst_port = $vpn['dst_port'];
+                $id_tunnel = $vpn['id'];
+              }else{
+                $dst_port = '';
+                $id_tunnel = '';
+              }
+            ?>
+            <form action="#" class="tambah-firewall" id-vpn="<?= $data['id'] ?>">
+              <div class="row">
+                <div class="col-sm-12 col-md-8 col-lg-7 pt-2">
+                  <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">Pilih IP</label>
+                    <select class="form-select" aria-label="Default select example" name="ip-vpn" required>
+                      <?php
+                      if($vpn['ip'] == $konektor1['ip']){
+                        ?>
+                      <option value="<?= $konektor1['ip'] ?>"><?= $konektor1['ip'].' - '.$konektor1['jenis'] ?></option>
+                      <option value="<?= $konektor2['ip'] ?>"><?= $konektor2['ip'].' - IP VPN' ?></option>
+                        <?php
+                      }else{
+                        ?>
+                      <option value="<?= $konektor2['ip'] ?>"><?= $konektor2['ip'].' - IP VPN' ?></option>
+                      <option value="<?= $konektor1['ip'] ?>"><?= $konektor1['ip'].' - '.$konektor1['jenis'] ?></option>
+                        <?php
+                      }
+                      ?>
+                    </select>
+                  </div>
+                </div>
+                <div class="col-sm-12 col-md-4 col-lg-5 pt-2">
+                  <div class="mb-3">
+                    <label for="dst-port" class="form-label">Dst Port</label>
+                    <input type="number" class="form-control" id="dst-port" name="dst-port" value="<?= $dst_port ?>">
+                  </div>
+                </div>
+                <div class="d-grid gap-2">
+                  <button class="btn btn-primary id-tunnel" type="submit" id-tunnel="<?= $id_tunnel ?>"><i class="fa-solid fa-satellite-dish"></i> Aktifkan</button>
+                </div>
+              </div>
+            </form>
+            <?php
+            if($vpn){
+              ?>
+            <p class="mt-1">Gunakan <b><?= ip_public()['dns'] ?></b> dengan port <b><i><?= $vpn['src_port']; ?></i></b> untuk mengakses port <?= $vpn['dst_port'] ;?> dijaringan lokal anda</p>
+              <?php
+            }
+              if($pecah[1] > 1){
+                echo '<hr>';
+              }
+            } 
+            ?>
+          </div>
+          <div class="col-sm-12 col-lg-5 pt-2">
+            <table class="table table-bordered">
+              <tr>
+                <td colspan="2">L2TP, PPTP, OPEN VPN</td>
+              </tr>
+              <tr>
+                <td>IP VPN</td>
+                <td><?= $konektor2['ip'] ?></td>
+              </tr>
+              <tr>
+                <td>Username</td>
+                <td><?= $konektor2['catatan'] ?></td>
+              </tr>
+              <tr>
+                <td>Password</td>
+                <td><?= $konektor2['catatan'] ?></td>
+              </tr>
+              <tr>
+                <td colspan="2"><a href="assets/konektor/config-digicore.ovpn" target="_blank">Download File config Open VPN</a></td>
+              </tr>
+              <tr>
+                <td colspan="2"><a href="<?= $konektor1['config'] ?>" target="_blank">Download File config Wireguard</a></td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php } ?>
+  </div>
   <div class="col-sm-12 col-md-6">
     <div class="row">
 
@@ -130,6 +231,33 @@ require 'function.php';
           }
         }, 2600);
       })
+    })
+
+    $(document).on('submit','.tambah-firewall',function(e){
+      e.preventDefault();
+      $(e.originalEvent.submitter).attr('disabled', true);
+      $(e.originalEvent.submitter).text('Menambahkan Firewall...');
+      let id_tunnel = $(e.originalEvent.submitter).attr('id-tunnel')
+      let id_vpn = $(this).attr('id-vpn');
+      let data = $(this).serialize();
+      $.post('proses-data', 'tambah-firewall='+id_vpn+'&id-tunnel='+id_tunnel+'&'+data, function(respon){
+        let pecah = respon.split('|');
+        Swal.fire({
+          position: "center",
+          icon: pecah[0],
+          title: pecah[1],
+          showConfirmButton: false,
+          timer: 2500
+        });
+        if(pecah[0] == 'success'){
+          setTimeout(() => {
+            location.reload();
+          }, 2600);
+        }
+      })
+    });
+
+    $('.tambah-firewall').submit(function(e){
     })
     
   })

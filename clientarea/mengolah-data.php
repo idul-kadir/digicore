@@ -52,14 +52,19 @@ if(isset($_POST['checkout'])){
 
         case 'VPN Tunnel':
           $konektor1 = get_konektor('Wireguard');
-          $konektor2 = get_konektor('ANY');
+          if($kode != 'TUNNEL 80'){
+            $konektor2 = get_konektor('ANY');
+          }else{
+             $konektor2 = get_konektor('OVPN');
+          }
           $berlaku = $data['masa_berlaku'];
           $kadaluarsa = date('Y-m-d', strtotime("+$berlaku days"));
           $cek = query("INSERT INTO `l_vpn`(`id`, `kode_produk`, `id_user`, `konektor1`, `konektor2`, `tgl_expired`, `perpanjang`, `status`) VALUES ('$id_layanan','$kode','$id','$konektor1','$konektor2','$kadaluarsa','$perpanjang','aktif')");
           if($cek){
-            // status_konektor($konektor2,'aktif');
-           $status = status_konektor($konektor2,'aktif');
-            echo 'success|'.$status;
+            $saldo = saldo($id,'kurang',$data['harga']);
+            status_konektor($konektor1,'aktif');
+            status_konektor($konektor2,'aktif');
+            echo 'success|VPN Tunnel berhasil dicheckout';
             exit;
           }
           echo 'success|tunnel';
@@ -73,5 +78,34 @@ if(isset($_POST['checkout'])){
   }else{
     echo 'error|Produk tidak teridentifikasi';
     exit;
+  }
+}
+
+if(isset($_POST['tambah-firewall'])){
+  $id_vpn = bersihkan($_POST['tambah-firewall']);
+  $ip_vpn = bersihkan($_POST['ip-vpn']);
+  $dst_port = bersihkan($_POST['dst-port']);
+  $id_tunnel = bersihkan($_POST['id-tunnel']);
+ 
+  if($id_tunnel == ''){
+    do{
+      $s_port = rand(1000,9999);
+      $cek = query("SELECT * FROM `tunnel` WHERE src_port = '$s_port' ");
+    }while(mysqli_num_rows($cek)>0);
+    $result = query("INSERT INTO `tunnel`(`id_vpn`, `ip`, `src_port`, `dst_port`) VALUES ('$id_vpn','$ip_vpn','$s_port','$dst_port')");
+  }else{
+    $cek = query("SELECT * FROM `tunnel` WHERE id = '$id_tunnel' ");
+    if(mysqli_num_rows($cek)>0){
+      $data = mysqli_fetch_assoc($cek);
+      firewall('hapus','',$data['src_port'],'');
+      $result = query("UPDATE `tunnel` SET `ip`='$ip_vpn',`dst_port`='$dst_port' WHERE id = '$id_tunnel' ");
+      $s_port = $data['src_port'];    
+    }
+  }
+  firewall('tambah',$ip_vpn,$s_port,$dst_port);
+  if($result){
+    echo 'success|Firewall VPN berhasil dibuat';
+  }else{
+    echo 'error|Gagal di buatkan FireWall';
   }
 }

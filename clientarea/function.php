@@ -198,8 +198,15 @@ function status_konektor($id,$status){
   if($status == 'aktif'){
     if($data['jenis'] != 'Wireguard'){
       buat_akun($data['catatan'],$data['catatan'],strtolower($data['jenis']),$data['ip']);
+    }else{
+      config_wireguard($data['config']);
     }
   }
+}
+
+function detail_connector($id){
+  $result = query("SELECT * FROM `connector` WHERE id = '$id' ");
+  return mysqli_fetch_assoc($result);
 }
 
 function buat_akun($nama,$pass,$servis,$ip){
@@ -245,4 +252,75 @@ function buat_akun($nama,$pass,$servis,$ip){
     echo "Gagal menghubungkan setelah $max_retries percobaan.\n";
   }
     
+}
+function firewall($jenis,$ip,$src_port,$dst_port) {
+  $api = new RouterosAPI();
+  $natParams = [
+    'chain' => 'dstnat',               // Chain
+    'dst-address' => ip_public()['ip'],        // IP tujuan untuk NAT
+    'protocol' => 'tcp',               // Protokol
+    'dst-port' => $src_port,                // Port tujuan
+    'action' => 'dst-nat',             // Tindakan
+    'to-addresses' => $ip, // IP lokal
+    'to-ports' => $dst_port,              // Port lokal
+    'comment' => tgl_indo(date('Y-m-d')) .' - '. date('H:i:s'), // Catatan
+];
+  
+  if ($api->connect($_SERVER['IP_CHR'], $_SERVER['USER_CHR'], $_SERVER['PASS_CHR'])) {
+    if($jenis == 'tambah'){
+      // Tambahkan aturan dst-nat menggunakan metode comm
+      $api->comm('/ip/firewall/nat/add', $natParams);
+    }elseif($jenis == 'hapus'){
+      $list = $api->comm('/ip/firewall/nat/print');
+      foreach($list as $data){
+        if($data['chain'] == 'dstnat' AND $data['dst-port'] == $src_port){
+          $id = $data['.id'];
+          $api->comm('/ip/firewall/nat/remove', ['.id' => $id]);
+        }
+      }
+    }
+
+    $api->disconnect();
+    
+    return "Dst-NAT rule added successfully!";
+  } else {
+    return "Failed to connect to Mikrotik API.";
+  }
+}
+
+function ip_public(){
+  return ['dns' => 'vpn.digicore.web.id', 'ip' =>'146.19.216.27'];
+}
+
+function hapus_firewall($dst_port){
+  $api = new RouterosAPI();
+  if ($api->connect($_SERVER['IP_CHR'], $_SERVER['USER_CHR'], $_SERVER['PASS_CHR'])) {
+    // Tambahkan aturan dst-nat menggunakan metode comm
+    $list = $api->comm('/ip/firewall/nat/print');
+    foreach($list as $data){
+      if($data['dst-port'] == $dst_port AND $data['chain'] == 'dstnat'){
+        $id = $data['.id'];
+        $api->comm('/ip/firewall/nat/remove', ['.id' => $id]);
+      }
+    }
+    $api->disconnect();
+    
+    return "Dst-NAT rule added successfully!";
+  } else {
+    return "Failed to connect to Mikrotik API.";
+  }
+}
+
+function config_wireguard($file){
+  if (file_exists($file)) {
+    // Membaca file dan menyimpannya sebagai array
+    $lines = file($file_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    
+    // Menampilkan isi array
+    foreach ($lines as $index => $line) {
+      echo "Baris " . ($index + 1) . ": " . $line . "<br>";
+    }
+  } else {
+    echo "File tidak ditemukan.";
+  }
 }
