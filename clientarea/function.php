@@ -198,8 +198,6 @@ function status_konektor($id,$status){
   if($status == 'aktif'){
     if($data['jenis'] != 'Wireguard'){
       buat_akun($data['catatan'],$data['catatan'],strtolower($data['jenis']),$data['ip']);
-    }else{
-      config_wireguard($data['config']);
     }
   }
 }
@@ -308,19 +306,5 @@ function hapus_firewall($dst_port){
     return "Dst-NAT rule added successfully!";
   } else {
     return "Failed to connect to Mikrotik API.";
-  }
-}
-
-function config_wireguard($file){
-  if (file_exists($file)) {
-    // Membaca file dan menyimpannya sebagai array
-    $lines = file($file_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    
-    // Menampilkan isi array
-    foreach ($lines as $index => $line) {
-      echo "Baris " . ($index + 1) . ": " . $line . "<br>";
-    }
-  } else {
-    echo "File tidak ditemukan.";
   }
 }

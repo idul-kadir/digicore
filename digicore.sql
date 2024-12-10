@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 09 Des 2024 pada 01.26
+-- Waktu pembuatan: 10 Des 2024 pada 01.34
 -- Versi server: 10.4.32-MariaDB-log
 -- Versi PHP: 8.2.12
 
@@ -41,28 +41,38 @@ CREATE TABLE `connector` (
 --
 
 INSERT INTO `connector` (`id`, `jenis`, `ip`, `catatan`, `config`, `status`) VALUES
-(1733406230, 'Wireguard', '185.22.25.2', '', 'assets/konektor/DigiCore-Wireguard-1733406230.conf', 'aktif'),
-(1733406248, 'Wireguard', '185.22.25.3', '', 'assets/konektor/DigiCore-Wireguard-1733406248.conf', 'tidak aktif'),
-(1733406266, 'Wireguard', '185.22.25.4', '', 'assets/konektor/DigiCore-Wireguard-1733406266.conf', 'tidak aktif'),
-(1733406284, 'Wireguard', '185.22.25.5', '', 'assets/konektor/DigiCore-Wireguard-1733406284.conf', 'tidak aktif'),
-(1733406300, 'Wireguard', '185.22.25.6', '', 'assets/konektor/DigiCore-Wireguard-1733406300.conf', 'tidak aktif'),
-(1733406315, 'Wireguard', '185.22.25.7', '', 'assets/konektor/DigiCore-Wireguard-1733406315.conf', 'tidak aktif'),
-(1733406330, 'Wireguard', '185.22.25.8', '', 'assets/konektor/DigiCore-Wireguard-1733406330.conf', 'tidak aktif'),
-(1733406372, 'Wireguard', '185.22.25.9', '', 'assets/konektor/DigiCore-Wireguard-1733406372.conf', 'tidak aktif'),
-(1733406396, 'Wireguard', '185.22.25.10', '', 'assets/konektor/DigiCore-Wireguard-1733406396.conf', 'tidak aktif'),
-(1733406426, 'Wireguard', '185.22.25.12', '', 'assets/konektor/DigiCore-Wireguard-1733406426.conf', 'tidak aktif'),
-(1733406441, 'Wireguard', '185.22.25.11', '', 'assets/konektor/DigiCore-Wireguard-1733406441.conf', 'tidak aktif'),
-(1733406458, 'Wireguard', '185.22.25.13', '', 'assets/konektor/DigiCore-Wireguard-1733406458.conf', 'tidak aktif'),
-(1733406477, 'Wireguard', '185.22.25.14', '', 'assets/konektor/DigiCore-Wireguard-1733406477.conf', 'tidak aktif'),
-(1733406495, 'Wireguard', '185.22.25.15', '', 'assets/konektor/DigiCore-Wireguard-1733406495.conf', 'tidak aktif'),
-(1733406513, 'Wireguard', '185.22.25.16', '', 'assets/konektor/DigiCore-Wireguard-1733406513.conf', 'tidak aktif'),
 (1733521774, 'ANY', '128.44.56.2', '6694', '', 'aktif'),
 (1733522024, 'OVPN', '128.44.56.3', '3594', '', 'tidak aktif'),
 (1733522042, 'OVPN', '128.44.56.4', '8159', '', 'tidak aktif'),
 (1733522053, 'ANY', '128.44.56.5', '5142', '', 'tidak aktif'),
 (1733522065, 'ANY', '128.44.56.6', '6252', '', 'tidak aktif'),
 (1733522079, 'ANY', '128.44.56.7', '8082', '', 'tidak aktif'),
-(1733522092, 'ANY', '128.44.56.8', '9691', '', 'tidak aktif');
+(1733522092, 'ANY', '128.44.56.8', '9691', '', 'tidak aktif'),
+(1733754322, 'Wireguard', '10.70.0.2', '', 'assets/konektor/DigiCore-Wireguard-1733754322.conf', 'aktif'),
+(1733754341, 'Wireguard', '10.70.0.3', '', 'assets/konektor/DigiCore-Wireguard-1733754341.conf', 'tidak aktif'),
+(1733754359, 'Wireguard', '10.70.0.4', '', 'assets/konektor/DigiCore-Wireguard-1733754359.conf', 'tidak aktif'),
+(1733754376, 'Wireguard', '10.70.0.5', '', 'assets/konektor/DigiCore-Wireguard-1733754376.conf', 'tidak aktif'),
+(1733754392, 'Wireguard', '10.70.0.6', '', 'assets/konektor/DigiCore-Wireguard-1733754392.conf', 'tidak aktif'),
+(1733754436, 'Wireguard', '10.70.0.7', '', 'assets/konektor/DigiCore-Wireguard-1733754436.conf', 'tidak aktif'),
+(1733754505, 'Wireguard', '10.70.0.10', '', 'assets/konektor/DigiCore-Wireguard-1733754505.conf', 'tidak aktif'),
+(1733754534, 'Wireguard', '10.70.0.12', '', 'assets/konektor/DigiCore-Wireguard-1733754534.conf', 'tidak aktif'),
+(1733754573, 'Wireguard', '10.70.0.9', '', 'assets/konektor/DigiCore-Wireguard-1733754573.conf', 'tidak aktif'),
+(1733754605, 'Wireguard', '10.70.0.11', '', 'assets/konektor/DigiCore-Wireguard-1733754605.conf', 'tidak aktif'),
+(1733754641, 'Wireguard', '10.70.0.13', '', 'assets/konektor/DigiCore-Wireguard-1733754641.conf', 'tidak aktif'),
+(1733754668, 'Wireguard', '10.70.0.14', '', 'assets/konektor/DigiCore-Wireguard-1733754668.conf', 'tidak aktif'),
+(1733754726, 'Wireguard', '10.70.0.8', '', 'assets/konektor/DigiCore-Wireguard-1733754726.conf', 'tidak aktif'),
+(1733754765, 'Wireguard', '10.70.0.15', '', 'assets/konektor/DigiCore-Wireguard-1733754765.conf', 'tidak aktif'),
+(1733754782, 'Wireguard', '10.70.0.16', '', 'assets/konektor/DigiCore-Wireguard-1733754782.conf', 'tidak aktif'),
+(1733754800, 'Wireguard', '10.70.0.17', '', 'assets/konektor/DigiCore-Wireguard-1733754800.conf', 'tidak aktif'),
+(1733754844, 'Wireguard', '10.70.0.18', '', 'assets/konektor/DigiCore-Wireguard-1733754844.conf', 'tidak aktif'),
+(1733754868, 'Wireguard', '10.70.0.19', '', 'assets/konektor/DigiCore-Wireguard-1733754868.conf', 'tidak aktif'),
+(1733754886, 'Wireguard', '10.70.0.20', '', 'assets/konektor/DigiCore-Wireguard-1733754886.conf', 'tidak aktif'),
+(1733754903, 'Wireguard', '10.70.0.21', '', 'assets/konektor/DigiCore-Wireguard-1733754903.conf', 'tidak aktif'),
+(1733754933, 'Wireguard', '10.70.0.22', '', 'assets/konektor/DigiCore-Wireguard-1733754933.conf', 'tidak aktif'),
+(1733754952, 'Wireguard', '10.70.0.23', '', 'assets/konektor/DigiCore-Wireguard-1733754952.conf', 'tidak aktif'),
+(1733754970, 'Wireguard', '10.70.0.24', '', 'assets/konektor/DigiCore-Wireguard-1733754970.conf', 'tidak aktif'),
+(1733754988, 'Wireguard', '10.70.0.25', '', 'assets/konektor/DigiCore-Wireguard-1733754988.conf', 'tidak aktif'),
+(1733755007, 'Wireguard', '10.70.0.26', '', 'assets/konektor/DigiCore-Wireguard-1733755007.conf', 'tidak aktif');
 
 -- --------------------------------------------------------
 
@@ -86,7 +96,7 @@ CREATE TABLE `l_vpn` (
 --
 
 INSERT INTO `l_vpn` (`id`, `kode_produk`, `id_user`, `konektor1`, `konektor2`, `tgl_expired`, `perpanjang`, `status`) VALUES
-(1733526226, 'TUNNEL 3', '1732487217', '1733406230', '1733521774', '2025-01-06', 'ya', 'aktif');
+(1733755284, 'TUNNEL 1', '1732487217', '1733754322', '1733521774', '2025-01-08', 'ya', 'aktif');
 
 -- --------------------------------------------------------
 
@@ -168,9 +178,7 @@ CREATE TABLE `tunnel` (
 --
 
 INSERT INTO `tunnel` (`id`, `id_vpn`, `ip`, `src_port`, `dst_port`) VALUES
-(4, '1733526226', '128.44.56.2', '8411', '21'),
-(5, '1733526226', '128.44.56.2', '7492', '25'),
-(6, '1733526226', '128.44.56.2', '6233', '22');
+(7, '1733755284', '10.70.0.2', '7879', '80');
 
 -- --------------------------------------------------------
 
@@ -192,7 +200,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `nama`, `wa`, `password`, `saldo`, `aktifitas`) VALUES
-(1732487217, 'Ridwan Kadir', '089669106718', '865a4f84143b1e26f0289fae728a62e9', 33000, '');
+(1732487217, 'Ridwan Kadir', '089669106718', '865a4f84143b1e26f0289fae728a62e9', 23000, '');
 
 --
 -- Indexes for dumped tables
@@ -242,7 +250,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT untuk tabel `tunnel`
 --
 ALTER TABLE `tunnel`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
