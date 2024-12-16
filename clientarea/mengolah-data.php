@@ -105,6 +105,7 @@ if(isset($_POST['tambah-firewall'])){
   firewall('tambah',$ip_vpn,$s_port,$dst_port);
   if($result){
     echo 'success|Firewall VPN berhasil dibuat';
+    exit;
   }else{
     echo 'error|Gagal di buatkan FireWall';
   }

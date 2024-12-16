@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 10 Des 2024 pada 01.34
+-- Waktu pembuatan: 16 Des 2024 pada 01.20
 -- Versi server: 10.4.32-MariaDB-log
 -- Versi PHP: 8.2.12
 
@@ -42,14 +42,14 @@ CREATE TABLE `connector` (
 
 INSERT INTO `connector` (`id`, `jenis`, `ip`, `catatan`, `config`, `status`) VALUES
 (1733521774, 'ANY', '128.44.56.2', '6694', '', 'aktif'),
-(1733522024, 'OVPN', '128.44.56.3', '3594', '', 'tidak aktif'),
+(1733522024, 'OVPN', '128.44.56.3', '3594', '', 'aktif'),
 (1733522042, 'OVPN', '128.44.56.4', '8159', '', 'tidak aktif'),
 (1733522053, 'ANY', '128.44.56.5', '5142', '', 'tidak aktif'),
 (1733522065, 'ANY', '128.44.56.6', '6252', '', 'tidak aktif'),
 (1733522079, 'ANY', '128.44.56.7', '8082', '', 'tidak aktif'),
 (1733522092, 'ANY', '128.44.56.8', '9691', '', 'tidak aktif'),
 (1733754322, 'Wireguard', '10.70.0.2', '', 'assets/konektor/DigiCore-Wireguard-1733754322.conf', 'aktif'),
-(1733754341, 'Wireguard', '10.70.0.3', '', 'assets/konektor/DigiCore-Wireguard-1733754341.conf', 'tidak aktif'),
+(1733754341, 'Wireguard', '10.70.0.3', '', 'assets/konektor/DigiCore-Wireguard-1733754341.conf', 'aktif'),
 (1733754359, 'Wireguard', '10.70.0.4', '', 'assets/konektor/DigiCore-Wireguard-1733754359.conf', 'tidak aktif'),
 (1733754376, 'Wireguard', '10.70.0.5', '', 'assets/konektor/DigiCore-Wireguard-1733754376.conf', 'tidak aktif'),
 (1733754392, 'Wireguard', '10.70.0.6', '', 'assets/konektor/DigiCore-Wireguard-1733754392.conf', 'tidak aktif'),
@@ -96,7 +96,8 @@ CREATE TABLE `l_vpn` (
 --
 
 INSERT INTO `l_vpn` (`id`, `kode_produk`, `id_user`, `konektor1`, `konektor2`, `tgl_expired`, `perpanjang`, `status`) VALUES
-(1733755284, 'TUNNEL 1', '1732487217', '1733754322', '1733521774', '2025-01-08', 'ya', 'aktif');
+(1734139316, 'TUNNEL 3', '1732487217', '1733754322', '1733521774', '2025-01-13', 'ya', 'aktif'),
+(1734139358, 'TUNNEL 80', '1732487217', '1733754341', '1733522024', '2025-01-13', 'ya', 'aktif');
 
 -- --------------------------------------------------------
 
@@ -178,7 +179,8 @@ CREATE TABLE `tunnel` (
 --
 
 INSERT INTO `tunnel` (`id`, `id_vpn`, `ip`, `src_port`, `dst_port`) VALUES
-(7, '1733755284', '10.70.0.2', '7879', '80');
+(22, '1734139316', '128.44.56.2', '4523', '22'),
+(23, '1734139316', '128.44.56.2', '4716', '8291');
 
 -- --------------------------------------------------------
 
@@ -200,7 +202,7 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`id`, `nama`, `wa`, `password`, `saldo`, `aktifitas`) VALUES
-(1732487217, 'Ridwan Kadir', '089669106718', '865a4f84143b1e26f0289fae728a62e9', 23000, '');
+(1732487217, 'Ridwan Kadir', '089669106718', '865a4f84143b1e26f0289fae728a62e9', 39000, '');
 
 --
 -- Indexes for dumped tables
@@ -250,7 +252,7 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT untuk tabel `tunnel`
 --
 ALTER TABLE `tunnel`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
