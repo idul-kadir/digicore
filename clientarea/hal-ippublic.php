@@ -3,6 +3,7 @@ session_start();
 if(!isset($_SESSION['id'])){
   exit;
 }
+
 $id = $_SESSION['id'];
 $_SESSION['halaman'] = 'ip-public';
 require 'function.php';
