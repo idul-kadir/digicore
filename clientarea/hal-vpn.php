@@ -31,7 +31,7 @@ require 'function.php';
       <h6 class="card-header text-white bg-primary"><?= $produk['nama'] ?></h6>
       <div class="card-body">
         <div class="row">
-          <div class="col-sm-12 col-lg-7">
+          <div class="col-sm-12">
             <?php
             $id_vpn = $data['id'];
             $list_l_vpn = query("SELECT * FROM `tunnel` WHERE id_vpn = '$id_vpn' ");
@@ -129,7 +129,7 @@ require 'function.php';
           } 
             ?>
           </div>
-          <div class="col-sm-12 col-lg-5 pt-2">
+          <div class="col-12 order-sm-12 pt-2">
             <table class="table table-bordered">
               <?php
               if($produk['nama'] != 'TUNNEL WEB SERVER'){

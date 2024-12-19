@@ -1,0 +1,19 @@
+RewriteEngine On
+
+# Menghilangkan ekstensi .php dari URL
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^(.\*)$ $1.php [L]
+
+# Blokir akses ke file sensitif
+
+<FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql|bak)$">
+Order allow,deny
+Deny from all
+</FilesMatch>
+
+# Menonaktifkan directory listing
+Options -Indexes
+
+RewriteRule ^send-message olah-data.php [L]

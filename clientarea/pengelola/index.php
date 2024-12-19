@@ -4,6 +4,12 @@ if(!isset($_SESSION['pengelola'])){
   header("location: ../login");
   exit;
 }
+/*catatan
+IP Public IND 1
+https://www.rumahweb.com/vps-alibaba-cloud/
+https://www.cloudaja.id/
+https://www.natanetwork.com/vps-ssd-singapore/
+*/
 require '../function.php';
 ?>
 <!doctype html>

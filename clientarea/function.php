@@ -332,3 +332,8 @@ function qr($configFile){
 
   return $qrCodeUrl;
 }
+
+function antrian($pesan,$tujuan,$apikey){
+  $tujuan = format_nomor($tujuan);
+  
+}
