@@ -333,7 +333,30 @@ function qr($configFile){
   return $qrCodeUrl;
 }
 
-function antrian($pesan,$tujuan,$apikey){
-  $tujuan = format_nomor($tujuan);
-  
+function antrian($pesan,$tujuan,$id_layanan){
+  $tujuan = format_nomor(bersihkan($tujuan));
+  $id_pesan = time();
+  $pesan = bersihkan($pesan);
+  query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','pending')");
+}
+
+function cek_spam($pesan,$tujuan){
+  $tujuan = format_nomor(bersihkan($tujuan));
+  $pesan = bersihkan($pesan);
+  $cek_data = query("SELECT * FROM `pesan` WHERE tujuan = '$tujuan' ORDER BY id DESC ");
+  if(mysqli_num_rows($cek_data) < 1){
+    return 'true';
+  }else{
+    $data = mysqli_fetch_assoc($cek_data);
+    if(substr($data['pesan'],0,99) == substr($pesan,0,99)){
+      $wkt_sekarang = time();
+      if(($wkt_sekarang - $data['id']) < 600){
+        return 'false';
+      }else{
+        return 'true';
+      }
+    }else{
+      return 'true';
+    }
+  }
 }
