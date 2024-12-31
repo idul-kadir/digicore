@@ -43,7 +43,7 @@ switch($keterangan){
                 $result = ['kode' => 200, "keterangan" => "Pesan OTP sudah masuk antrian."];
               }else{
                 antrian($pesan,$data['tujuan'],$id_layanan);
-                $result = ['kode' => 200, "keterangan" => "Pesan OTP sudah masuk antrian."];
+                $result = ['kode' => 200, "keterangan" => "Pesan sudah masuk antrian."];
               }
             }else{
               $result = ['kode' => 501, "keterangan" => "Pesan terindikasi SPAM. Silahkan tunggu 10 menit baru pesan bisa dikirimkan kembali"];
