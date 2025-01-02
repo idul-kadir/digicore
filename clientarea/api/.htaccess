@@ -6,6 +6,12 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.php -f
 RewriteRule ^(.\*)$ $1.php [L]
 
+SetEnv USER root
+SetEnv PASS 
+SetEnv DB digicore
+SetEnv HOST localhost
+
+
 # Blokir akses ke file sensitif
 
 <FilesMatch "\.(htaccess|htpasswd|ini|log|sh|sql|bak)$">

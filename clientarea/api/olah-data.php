@@ -1,6 +1,6 @@
 <?php
 error_reporting(1);
-require '../function.php';
+require 'function.php';
 
 header("Content-Type: application/json");
 
