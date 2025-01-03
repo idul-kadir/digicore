@@ -23,3 +23,4 @@ Deny from all
 Options -Indexes
 
 RewriteRule ^send-message olah-data.php [L]
+RewriteRule ^terjadwal terjadwal.php [L]

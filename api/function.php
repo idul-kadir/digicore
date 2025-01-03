@@ -3,6 +3,7 @@
 date_default_timezone_set('Asia/Makassar');
 
 $nomor_server = ['6285240346020','6287840189270'];
+$list_server = glob('status-server/*.json');
 
 $koneksi = mysqli_connect($_SERVER['HOST'], $_SERVER['USER_DB'], $_SERVER['PASS_DB'], $_SERVER['DB']);
 
@@ -29,19 +30,21 @@ function bersihkan($data) {
 }
 
 function kirim_pesan($pesan, $tujuan) {
-    // Format nomor tujuan
-    $tujuan = format_nomor($tujuan);
-
+  $server = generate_server_pengirim($tujuan);
+  if($server != false){  
     // Siapkan data JSON
     $data = array(
-        "tujuan" => $tujuan,
-        "pesan" => $pesan
+      "phone" => $tujuan,
+      "message" => $pesan
     );
 
+    $data_server = json_decode(file_get_contents("status-server/$server"), true);
+    $url = $data_server['link_server'].'/send/message';
+    
     $curl = curl_init();
-
+    
     curl_setopt_array($curl, array(
-      CURLOPT_URL => 'https://api.digicore.web.id/send-message',
+      CURLOPT_URL => $url,
       CURLOPT_RETURNTRANSFER => true,
       CURLOPT_ENCODING => '',
       CURLOPT_MAXREDIRS => 10,
@@ -49,17 +52,20 @@ function kirim_pesan($pesan, $tujuan) {
       CURLOPT_FOLLOWLOCATION => true,
       CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
       CURLOPT_CUSTOMREQUEST => 'POST',
-      CURLOPT_POSTFIELDS => json_encode($data),
+      CURLOPT_POSTFIELDS =>json_encode($data),
       CURLOPT_HTTPHEADER => array(
-        'Apikey: 1d0bfc76eebe36f1e85e0871b584719c',
         'Content-Type: application/json'
       ),
     ));
-
+    
     $response = curl_exec($curl);
-
+    
     curl_close($curl);
-    return $response;
+    $result = ["result" => json_decode($response, true), "server" => $server];
+    return json_encode($result);
+  }else{
+    return false;
+  }
 }
 
 function format_nomor($nomor){
@@ -171,74 +177,77 @@ function baca_status($nama_file){
     cek_koneksi();
     sleep(2);
   }
-  $data = json_decode(file_get_contents('status-server/'.$nama_file), true);
-  $status = $data['status'];
-  $update = $data['last_update'];
-  if($status == 'connected'){
-    return true;
-  }else{
+  $format = explode('.',$nama_file);
+  if(end($format) != 'json'){
     return false;
+  }else{
+    $data = json_decode(file_get_contents('status-server/'.$nama_file), true);
+    $status = $data['status'];
+    $update = $data['last_update'];
+    if($status == 'connected'){
+      return true;
+    }else{
+      return false;
+    }
   }
 }
 
 function generate_server_pengirim($no_tujuan){
+  global $list_server;
+  $stats = false;
   $cek = query("SELECT * FROM `pesan` WHERE tujuan = '$no_tujuan' AND `status` != 'pending' ORDER BY id DESC ");
   if(mysqli_num_rows($cek)>0){
     $data = mysqli_fetch_assoc($cek);
-    $keterangan = $data['keterangan'];
-    if($keterangan == 'server1.json'){
-      $cek_status = baca_status($keterangan);
-      if($cek_status == true){
-        return 'server1.json';
-      }else{
-        $cek_status = baca_status('server2.json');
-        if($cek_status == true){
-          return 'server2.json';
-        }else{
-          return false;
-        }
-      }
+    if(baca_status($data['keterangan']) == true){
+      $stats = $data['keterangan'];
     }else{
-      $cek_status = baca_status($keterangan);
-      if($cek_status == true){
-        return 'server2.json';
-      }else{
-        $cek_status = baca_status('server1.json');
-        if($cek_status == true){
-          return 'server1.json';
-        }else{
-          return false;
-        }
+      $loop = 0;
+      do{
+        $server = str_replace('status-server/','',$list_server[array_rand($list_server)]);
+        $loop++;
+      }while(baca_status($server) == false OR $loop < 5);
+      if(baca_status($server) == true){
+        $stats = $server;
       }
     }
   }else{
-    $list_data_server = ['server1.json','server2.json'];
-    $rand = array_rand($list_data_server);
-    $keterangan = $list_data_server[$rand];
-    if($keterangan == 'server1.json'){
-      $cek_status = baca_status($keterangan);
-      if($cek_status == true){
-        return 'server1.json';
-      }else{
-        $cek_status = baca_status('server2.json');
-        if($cek_status == true){
-          return 'server2.json';
-        }else{
-          return false;
-        }
-      }
-    }else{
-      $cek_status = baca_status($keterangan);
-      if($cek_status == true){
-        return 'server2.json';
-      }else{
-        $cek_status = baca_status('server1.json');
-        if($cek_status == true){
-          return 'server1.json';
-        }else{
-          return false;
-        }
-      }
+    $loop = 0;
+    do{
+      $server = str_replace('status-server/','',$list_server[array_rand($list_server)]);
+      $loop++;
+    }while(baca_status($server) == false OR $loop < 5);
+    if(baca_status($server) == true){
+      $stats = $server;
     }
   }
+  return $stats;
+}
+
+
+function cek_spam($pesan,$tujuan){
+  $tujuan = format_nomor(bersihkan($tujuan));
+  $pesan = bersihkan($pesan);
+  $cek_data = query("SELECT * FROM `pesan` WHERE tujuan = '$tujuan' ORDER BY id DESC ");
+  if(mysqli_num_rows($cek_data) < 1){
+    return 'true';
+  }else{
+    $data = mysqli_fetch_assoc($cek_data);
+    if(substr($data['pesan'],0,99) == substr($pesan,0,99)){
+      $wkt_sekarang = time();
+      if(($wkt_sekarang - $data['id']) < 600){
+        return 'false';
+      }else{
+        return 'true';
+      }
+    }else{
+      return 'true';
+    }
+  }
+}
+
+function antrian($pesan,$tujuan,$id_layanan){
+  $tujuan = format_nomor(bersihkan($tujuan));
+  $id_pesan = time();
+  $pesan = bersihkan($pesan);
+  query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','pending')");
 }
