@@ -42,7 +42,7 @@ switch($keterangan){
                 antrian($pesan,$data['tujuan'],$id_layanan);
                 $result = ['kode' => 200, "keterangan" => "Pesan OTP sudah masuk antrian."];
               }else{
-                antrian($pesan,$data['tujuan'],$id_layanan);
+                antrian($data['pesan'],$data['tujuan'],$id_layanan);
                 $result = ['kode' => 200, "keterangan" => "Pesan sudah masuk antrian."];
               }
             }else{

@@ -131,14 +131,14 @@
               icon: pecah[0],
               title: pecah[1],
               showConfirmButton: false,
-              timer: 2500
+              timer: 3500
             });
             $('#tbl-login').removeAttr('disabled');
             $('#tbl-login').text('Login');
             if(pecah[0] == 'success'){
               setTimeout(() => {
                 window.location.href = '../user';
-              }, 2600);
+              }, 3600);
             }
           })
         }

@@ -38,6 +38,12 @@ if(isset($_POST['tambah-saldo'])){
     $top_up = $pengguna['saldo'] + $jumlah;
     $result = query("UPDATE `user` SET `saldo`='$top_up' WHERE id = '$client' ");
     if($result){
+      $nama = $pengguna['nama'];
+      $sisa_saldo = rupiah($pengguna['saldo']);
+      $jml_top = rupiah($jumlah);
+      $total = rupiah($top_up);
+      $pesan = "*TOP UP BERHASIL*,\n==============================\n\nHallo _*$nama*_, proses Top Up saldo anda telah berhasil dilakukan. Berikut kami kirimkan detail saldo anda\n\n------------------------------------------------------\nSisa saldo : *$sisa_saldo*\nTop Up : *$jml_top*\nTotal : *$total*\n------------------------------------------------------\n\nSemua layanan yang bertanda _*Perpanjang Otomatis*_ akan dipotong dari saldo yang ada.\n\nTerima Kasih atas kepercayaan anda kepada kami\n\n*Salam DigiCore*";
+      kirim_pesan($pesan,$pengguna['wa']);
       echo 'success|Top up berhasil dilakukan';
     }else{
       echo 'error|Top up gagal dilakukan';

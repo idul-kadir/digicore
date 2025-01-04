@@ -19,19 +19,47 @@ for($i=0; $i<3; $i++){
         $status = 'sukses';
         $keterangan = $server;
       }else{
-        $status = 'gagal';
+        if($keterangan == 'you are not logged in'){
+          $status = 'pending';
+          $keterangan = '';
+          cek_koneksi();
+        }else{
+          $status = 'gagal';
+        }
       }
       query("UPDATE `pesan` SET `terkirim`='$eksekusi',`status`='$status',`keterangan`='$keterangan' WHERE id = '$id' ");
     }
-    sleep(20);
   }else{
-    echo 'tidak ada pesan';
+    // echo 'tidak ada pesan';
+  }
+  sleep(20);
+}
+
+//mengecek konektifitas whatsapp setiap 5 menit
+$menit = (int)date('i');
+if($menit%15 == 0){
+  foreach($list_server as $server){
+    $data = file_get_contents($server);
+    $status[] = json_decode($data, true);
+  }
+  cek_koneksi();
+  sleep(2);
+
+  foreach($list_server as $server){
+    $link = $server['link_server'];
+    $number = $server['number'];
+    $status_s = $server['status'];
+    $kategori = $server['categori'];
+    for($i=0; $i<count($status); $i++){
+      if($kategori == $status[$i]['categori'] AND $link == $status[$i]['link']){
+        if($status_s != $status[$i]['status']){
+          $pesan = "whatsapp $kategori $status_s. Silahkan kunjungi $link";
+          kirim_pesan_telegram($pesan);
+        }
+      }
+    }
+
   }
 }
 
-//mengecek konektifitas whatsapp
-$menit = (int)date('i');
-if($menit%15 == 0){
-  // cek_koneksi();
-  echo '<br>mengecek koneksi juga';
-}
+cek_koneksi();

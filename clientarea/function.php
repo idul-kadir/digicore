@@ -78,7 +78,7 @@ function kirim_pesan($pesan, $tujuan) {
       CURLOPT_CUSTOMREQUEST => 'POST',
       CURLOPT_POSTFIELDS => json_encode($data),
       CURLOPT_HTTPHEADER => array(
-        'Apikey: 1d0bfc76eebe36f1e85e0871b584719c',
+        'Apikey: SjXeeugR6zDOWvZZu0qDN3unwd5pKZ191735994927975',
         'Content-Type: application/json'
       ),
     ));

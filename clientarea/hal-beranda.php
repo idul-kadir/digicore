@@ -226,6 +226,10 @@ $_SESSION['halaman'] = 'beranda';
             </tr>
             <tr>
               <td>Singapore</td>
+              <td><span class="badge rounded-pill bg-success"><i class="fa-regular fa-circle-dot fa-fade"></i> Online</span></td>
+            </tr>
+            <tr>
+              <td>Hawai</td>
               <td><span class="badge rounded-pill bg-warning"><i class="fa-solid fa-triangle-exclamation fa-fade"></i> Maintenance</span></td>
             </tr>
             <tr>
