@@ -28,11 +28,11 @@ for($i=0; $i<3; $i++){
         }
       }
       query("UPDATE `pesan` SET `terkirim`='$eksekusi',`status`='$status',`keterangan`='$keterangan' WHERE id = '$id' ");
+      sleep(17+$i);
     }
   }else{
-    // echo 'tidak ada pesan';
+    sleep(15);
   }
-  sleep(20);
 }
 
 //mengecek konektifitas whatsapp setiap 5 menit
@@ -62,4 +62,9 @@ if($menit%15 == 0){
   }
 }
 
-cek_koneksi();
+//h-1 habis layanan
+$periksa = date('H:i');
+if($periksa == '20:00'){
+  $besok = date('Y-m-d', strtotime("+1 days"));
+  
+}

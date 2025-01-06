@@ -1,4 +1,4 @@
 <?php
 require 'function.php';
 
-echo baca_status('server1.json');
+echo $tgl = date('Y-m-d', strtotime("+1 month"));
