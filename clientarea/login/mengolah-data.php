@@ -4,7 +4,7 @@ require '../function.php';
 
 if(isset($_POST['daftar'])){
   $nama = bersihkan($_POST['nama']);
-  $telp = bersihkan($_POST['telp']);
+  $telp = bersihkan(format_nomor($_POST['telp']));
   $pass = bersihkan($_POST['password']);
   $acak = md5($_SERVER['PENGACAK']. md5($pass). $_SERVER['PENGACAK']);
   $cek_user = query("SELECT * FROM `user` WHERE wa = '$telp' ");

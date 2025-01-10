@@ -29,14 +29,23 @@ function bersihkan($data) {
   return $data;
 }
 
-function kirim_pesan($pesan, $tujuan) {
+function kirim_pesan($pesan, $tujuan, $id_pesan = null) {
   $server = generate_server_pengirim($tujuan);
   if($server != false){  
-    // Siapkan data JSON
-    $data = array(
-      "phone" => $tujuan,
-      "message" => $pesan
-    );
+    if($id_pesan == null){
+      // Siapkan data JSON
+      $data = array(
+        "phone" => $tujuan,
+        "message" => $pesan
+      );
+    }else{
+      // Siapkan data JSON
+      $data = array(
+        "phone" => $tujuan,
+        "message" => $pesan,
+        "reply_message_id" => $id_pesan
+      );
+    }
 
     $data_server = json_decode(file_get_contents("status-server/$server"), true);
     $url = $data_server['link_server'].'/send/message';
@@ -68,6 +77,11 @@ function kirim_pesan($pesan, $tujuan) {
   }
 }
 
+function kirim_pesan_telegram($pesan){
+  $pesan = str_replace(' ','%20', $pesan);
+  file_get_contents("https://api.telegram.org/bot1168556933:AAETrMmLdgMaOhduC-4SBZe5RpkFl9HVOh0/sendMessage?chat_id=652919139&text=$pesan");
+}
+
 function format_nomor($nomor){
   $nomor = preg_replace('/[^0-9]/', '', $nomor);
 
@@ -84,7 +98,7 @@ function cek_koneksi(){
   //mengecek status koneksi whatsapp di server 1
   $server1 = json_decode(cek_koneksi_wa1(), true);
   if(isset($server1['code'])){
-    if(count($server1['results']) > 0){
+    if($server1['results'] != ''){
       $nomor = explode(':', $server1['results'][0]['device'])[0];
       $data = ["code" => 200, "categori" => "server1", "status" => "connected", "number" => $nomor, "last_update" => time(), "link_server" => "https://serverwa1.digicore.web.id"];
 
@@ -106,10 +120,10 @@ function cek_koneksi(){
     fclose($file);
   }
 
-  //mengecek status koneksi whatsapp di server 1
+  //mengecek status koneksi whatsapp di server 2
   $server2 = json_decode(cek_koneksi_wa2(), true);
   if(isset($server2['code'])){
-    if(count($server2['results']) > 0){
+    if($server2['results'] != ''){
       $nomor = explode(':', $server2['results'][0]['device'])[0];
       $data = ["code" => 200, "categori" => "server2", "status" => "connected", "number" => $nomor, "last_update" => time(), "link_server" => "https://serverwa2.digicore.web.id"];
 
@@ -245,9 +259,13 @@ function cek_spam($pesan,$tujuan){
   }
 }
 
-function antrian($pesan,$tujuan,$id_layanan){
+function antrian($pesan,$tujuan,$id_layanan, $status = null){
   $tujuan = format_nomor(bersihkan($tujuan));
   $id_pesan = time();
   $pesan = bersihkan($pesan);
-  query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','pending')");
+  if($status == null){
+    query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','pending')");
+  }else{
+    query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','spam')");
+  }
 }

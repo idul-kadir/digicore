@@ -6,8 +6,8 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}\.php -f
 RewriteRule ^(.\*)$ $1.php [L]
 
-SetEnv USER root
-SetEnv PASS 
+SetEnv USER_DB root
+SetEnv PASS_DB 
 SetEnv DB digicore
 SetEnv HOST localhost
 
@@ -24,3 +24,4 @@ Options -Indexes
 
 RewriteRule ^send-message olah-data.php [L]
 RewriteRule ^terjadwal terjadwal.php [L]
+RewriteRule ^webhook callback.php [L]

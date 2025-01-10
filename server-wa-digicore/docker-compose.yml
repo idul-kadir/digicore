@@ -1,0 +1,18 @@
+version: '3.8'
+services:
+  whatsapp:
+    image: aldinokemal2104/go-whatsapp-web-multidevice
+    container_name: whatsapp-digicore
+    ports:
+      - "3000:3000" # Port yang digunakan
+    volumes:
+      - whatsapp:/app/storages # Volume untuk penyimpanan
+    command: >
+      #--autoreply="Don't reply this message please"
+      --webhook="https://webhook.site/5cd6265f-2807-41ce-b4cb-bddae5da55d4"
+    restart: always
+    mem_limit: 150m # Batas maksimum memori 150MB
+volumes:
+  whatsapp:
+    name: whatsapp # Membuat volume dengan nama 'whatsapp'
+

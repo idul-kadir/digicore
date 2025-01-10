@@ -134,11 +134,16 @@
           $('#tbl-daftar').text('Buat Akun');
           if(pecah[0] == 'success'){
             setTimeout(() => {
-              window.location.href = '../beranda';
+              window.location.href = '../user';
             }, 5500);
           }
         })
       })
+
+       $('input[name="telp"]').on('input', function() {
+        // Hanya sisakan angka
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
 
     })
   </script>
