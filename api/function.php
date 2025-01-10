@@ -246,9 +246,9 @@ function cek_spam($pesan,$tujuan){
     return 'true';
   }else{
     $data = mysqli_fetch_assoc($cek_data);
-    if(substr($data['pesan'],0,99) == substr($pesan,0,99)){
+    if(substr($data['pesan'],0,250) == substr($pesan,0,99)){
       $wkt_sekarang = time();
-      if(($wkt_sekarang - $data['id']) < 600){
+      if(($wkt_sekarang - $data['id']) < 9000){
         return 'false';
       }else{
         return 'true';
