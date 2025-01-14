@@ -18,9 +18,9 @@ switch($keterangan){
         $cek_api = query("SELECT * FROM `l_whatsapp` WHERE apikey='$apikey' AND `status`='aktif' ");
         if(mysqli_num_rows($cek_api)>0){
           if(isset($data['pesan']) && isset($data['tujuan'])){
+            $data_api = mysqli_fetch_assoc($cek_api);
+            $id_layanan = $data_api['id'];
             if(cek_spam($data['pesan'], $data['tujuan']) == 'true'){
-              $data_api = mysqli_fetch_assoc($cek_api);
-              $id_layanan = $data_api['id'];
               if($data_api['kode_produk'] == 'FREE'){
                 $thn_skrang = date('Y');
                 $bln_skrang = date('n');
@@ -46,7 +46,8 @@ switch($keterangan){
                 $result = ['kode' => 200, "keterangan" => "Pesan sudah masuk antrian."];
               }
             }else{
-              $result = ['kode' => 501, "keterangan" => "Pesan terindikasi SPAM. Silahkan tunggu 10 menit baru pesan bisa dikirimkan kembali"];
+              $result = ['kode' => 501, "keterangan" => "Pesan terindikasi SPAM. Pesan anda akan dikirim 30 menit dari sekarang"];
+              antrian($data['pesan'],$data['tujuan'],$id_layanan, 'spam');
             }
           }else{
             $result = ['kode' => 501, "keterangan" => "Parameter required tidak dikenali"];

@@ -28,10 +28,22 @@ for($i=0; $i<3; $i++){
         }
       }
       query("UPDATE `pesan` SET `terkirim`='$eksekusi',`status`='$status',`keterangan`='$keterangan' WHERE id = '$id' ");
-      sleep(17+$i);
     }
+    sleep(17);
   }else{
     sleep(15);
+  }
+}
+
+//mengecek apakah pesan kategori spam sudah bisa dikirim
+$cek_spam = query("SELECT * FROM `pesan` WHERE `status` = 'spam' ORDER BY id ASC LIMIT 2 ");
+if(mysqli_num_rows($cek_spam) > 0){
+  while($data = mysqli_fetch_assoc($cek_spam)){
+    $w_masuk = $data['id'];
+    $w_sekarang = time();
+    if($w_sekarang - $w_masuk >= 1800){
+      query("UPDATE `pesan` SET `status` = 'pending' WHERE id = '$w_masuk' ");
+    }
   }
 }
 
@@ -60,11 +72,4 @@ if($menit%15 == 0){
     }
 
   }
-}
-
-//h-1 habis layanan
-$periksa = date('H:i');
-if($periksa == '20:00'){
-  $besok = date('Y-m-d', strtotime("+1 days"));
-  
 }

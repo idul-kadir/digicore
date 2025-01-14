@@ -259,9 +259,19 @@ function cek_spam($pesan,$tujuan){
   }
 }
 
-function antrian($pesan,$tujuan,$id_layanan){
+function antrian($pesan,$tujuan,$id_layanan, $status = null){
   $tujuan = format_nomor(bersihkan($tujuan));
-  $id_pesan = time();
+  $i = 0;
+  do{
+    $id_pesan = time() + $i;
+    $cek_id = query("SELECT * FROM `pesan` WHERE id = '$id_pesan' ");
+    $i++;
+  }while(mysqli_num_rows($cek_id) > 0);
+  
   $pesan = bersihkan($pesan);
-  query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','pending')");
+  if($status == null){
+    query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','pending')");
+  }else{
+    query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','spam')");
+  }
 }
