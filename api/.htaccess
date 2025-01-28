@@ -11,6 +11,11 @@ SetEnv PASS_DB
 SetEnv DB digicore
 SetEnv HOST localhost
 
+#CP adalah cyberpanel
+SetEnv HOST_CP "https://103.26.14.158"
+SetEnv USER_CP "digicore"
+SetEnv PASS_CP "rHqkPmHonh!Io!!y"
+
 
 # Blokir akses ke file sensitif
 
@@ -25,3 +30,4 @@ Options -Indexes
 RewriteRule ^send-message olah-data.php [L]
 RewriteRule ^terjadwal terjadwal.php [L]
 RewriteRule ^webhook callback.php [L]
+RewriteRule ^cyberpanel/(.*)$ api-cyberpanel.php?aksi=$1 [L]

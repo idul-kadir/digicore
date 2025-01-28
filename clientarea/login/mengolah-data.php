@@ -4,16 +4,17 @@ require '../function.php';
 
 if(isset($_POST['daftar'])){
   $nama = bersihkan($_POST['nama']);
+  $email = bersihkan($_POST['email']);
   $telp = bersihkan(format_nomor($_POST['telp']));
   $pass = bersihkan($_POST['password']);
   $acak = md5($_SERVER['PENGACAK']. md5($pass). $_SERVER['PENGACAK']);
   $cek_user = query("SELECT * FROM `user` WHERE wa = '$telp' ");
   if(mysqli_num_rows($cek_user)<1){
     $id = time();
-    $result = query("INSERT INTO `user`(`id`, `nama`, `wa`, `password`) VALUES ('$id','$nama','$telp','$acak')");
+    $result = query("INSERT INTO `user`(`id`, `nama`, `wa`, `password`, `email`) VALUES ('$id','$nama','$telp','$acak','$email')");
     if($result){
       echo 'success|' . $nama . ' telah berhasil melakukan registrasi';
-      $pesan = "*REGISTRASI BERHASIL*,\n==============================\n\nHallo _*$nama*_, proses pendaftaran anda di https://digicore.web.id telah berhasil dilakukan. Berikut kami kirimkan detail registrasi anda\n\n------------------------------------------------------\nNama Lengkap : $nama\nUsername : *$telp*\nPassword : $pass\nUrl : https://clientarea.digicore.web.id\n------------------------------------------------------\n\nTerima Kasih atas kepercayaan anda kepada kami\n\n*Salam DigiCore*";
+      $pesan = "*REGISTRASI BERHASIL*,\n==============================\n\nHallo _*$nama*_, proses pendaftaran anda di https://digicore.web.id telah berhasil dilakukan. Berikut kami kirimkan detail registrasi anda\n\n------------------------------------------------------\nNama Lengkap : $nama\nEmail : *$email*\nUsername : *$telp*\nPassword : $pass\nUrl : https://clientarea.digicore.web.id\n------------------------------------------------------\n\nTerima Kasih atas kepercayaan anda kepada kami\n\n*Salam DigiCore*";
       kirim_pesan($pesan,$telp);
       $_SESSION['id'] = $id;
     }

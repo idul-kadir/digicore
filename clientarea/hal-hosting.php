@@ -3,9 +3,10 @@ session_start();
 if(!isset($_SESSION['id'])){
   exit;
 }
+
 $id = $_SESSION['id'];
+$_SESSION['halaman'] = 'hosting';
 require 'function.php';
-$_SESSION['halaman'] = 'whatsapp';
 ?>
 <style>
   h5{
@@ -18,102 +19,16 @@ $_SESSION['halaman'] = 'whatsapp';
     vertical-align: text-top
   }
 </style>
+
 <div class="row">
+  <div class="col-sm-12 col-md-6">
 
-  <div class="col-sm-12 col-md-6 col-lg-6">
-  <?php
-  $cari_layanan = query("SELECT * FROM `l_whatsapp` WHERE id_user = '$id' AND `status` = 'aktif' ORDER BY id DESC ");
-  if(mysqli_num_rows($cari_layanan)>0){
-    while($data = mysqli_fetch_assoc($cari_layanan)){
-      $produk = produk($data['kode_produk']);
-      if($data['kode_produk'] == 'OTP'){
-        $pesan_contoh = 'Kode OTP anda 91158';
-      }else{
-        $pesan_contoh = 'Pesan ini dikirim dari layanan DigiCore dengan kategori '.$produk['nama'];
-      }
-  ?>
-    <div class="card">
-      <h5 class="card-header text-white bg-primary"><?= $produk['nama'] ?></h5>
-      <div class="card-body mt-2">
-        <table>
-          <tr>
-            <td>Expired</td>
-            <td style="width:25px; text-align:center">:</td>
-            <td><?= tgl_indo($data['tgl_expired']) ?></td>
-          </tr>
-          <tr>
-            <td>Perpanjang Otomatis</td>
-            <td style="width:25px; text-align:center">:</td>
-            <td>
-              <?php
-              if($data['perpanjang'] == 'tidak'){
-                echo '<span class="badge bg-danger">Tidak</span>';
-              }else{
-                echo '<span class="badge bg-success">Ya</span>';
-              }
-              ?>
-            </td>
-          </tr>
-        </table>
-        <table class="mt-4">
-          <tr>
-            <td colspan="3">Dokumentasi API</td>
-          </tr>
-          <tr>
-            <td>Request Method</td>
-            <td style="width:25px; text-align:center">:</td>
-            <td>POST</td>
-          </tr>
-          <tr>
-            <td>Endpoint</td>
-            <td style="width:25px; text-align:center">:</td>
-            <td><?= $_SERVER['ENDPOINT'] ?></td>
-          </tr>
-        </table>
-        <hr>
-        <p>Dokumentasi Curl</p>
-        <p>
-          <code>
-           <?php
-            // Data dinamis
-            $api = $data['apikey'];
-            $tujuan = pengguna($id)['wa'];
-
-            // Membuat string cURL yang valid
-            $curl_script = <<<CURL
-            curl --location 'https://api.digicore.web.id/send-message' \
-            --header 'Apikey: {$api}' \
-            --header 'Content-Type: application/json' \
-            --data '{
-                "tujuan": "{$tujuan}",
-                "pesan": "{$pesan_contoh}"
-            }'
-            CURL;
-
-            // Menampilkan hasil agar bisa dicopy ke Postman atau terminal
-            echo "<pre>$curl_script</pre>";
-            ?>
-          </code>
-        </p>
-      </div>
-    </div>
-  <?php
-    }
-  }else{
-    ?>
-    <div class="alert alert-danger" role="alert">
-      Opps!!! Anda tidak memiliki layanan whatsapp yang aktif. Anda bisa mencoba paket gratis untuk mempelajari dokumentasinya
-    </div>
-    <?php
-  }
-  ?>
   </div>
-
-  <div class="col-sm-12 col-md-6 col-lg-6">
+  <div class="col-sm-12 col-md-6">
     <div class="row">
 
-      <?php
-        $result = query("SELECT * FROM `produk` WHERE kategori = 'whatsapp' ORDER BY harga ASC ");
+    <?php
+        $result = query("SELECT * FROM `produk` WHERE kategori = 'hosting' ORDER BY harga ASC ");
         while($data = mysqli_fetch_assoc($result)){
       ?>
       <div class="col-sm-12 col-md-6 col-lg-6 col-xl-6">
@@ -142,7 +57,7 @@ $_SESSION['halaman'] = 'whatsapp';
               ?>
             </ul>
             <?php
-            if(pengguna($id)['saldo'] >= $data['harga']){
+            if((pengguna($id)['saldo'] >= $data['harga']) AND $data['status'] == 'aktif'){
               $status_tbl = '';
               $class = 'checkout';
             }else{
@@ -158,7 +73,6 @@ $_SESSION['halaman'] = 'whatsapp';
 
     </div>
   </div>
-
 </div>
 
 <div class="modal fade" id="modal-checkout" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -183,8 +97,6 @@ $_SESSION['halaman'] = 'whatsapp';
 
 <script>
   $(document).ready(function(){
-    $('#tabel-monitor').DataTable();
-
     $('.checkout').click(function(){
       $('#modal-checkout').modal('show');
       let id = $(this).attr('kode-produk');
@@ -222,6 +134,5 @@ $_SESSION['halaman'] = 'whatsapp';
         }, 2600);
       })
     })
-
   })
 </script>

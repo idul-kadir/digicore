@@ -1,6 +1,7 @@
 <?php
 include('assets/vendor/api-mikrotik/routeros_api.class.php');
 date_default_timezone_set('Asia/Makassar');
+$layanan = ['l_whatsapp','l_vpn'];
 
 $koneksi = mysqli_connect($_SERVER['HOST'], $_SERVER['USER_DB'], $_SERVER['PASS_DB'], $_SERVER['DB']);
 
@@ -78,7 +79,7 @@ function kirim_pesan($pesan, $tujuan) {
       CURLOPT_CUSTOMREQUEST => 'POST',
       CURLOPT_POSTFIELDS => json_encode($data),
       CURLOPT_HTTPHEADER => array(
-        'Apikey: SjXeeugR6zDOWvZZu0qDN3unwd5pKZ191735994927975',
+        'Apikey: v1IsN2FNL5WLALqGfWpOUAhthQR4Jch31737286333605',
         'Content-Type: application/json'
       ),
     ));
@@ -114,9 +115,9 @@ function pengguna($id){
   $cari = query("SELECT * FROM `user` WHERE id = '$id' ");
   if(mysqli_num_rows($cari)>0){
     $data = mysqli_fetch_assoc($cari);
-    $result = ["nama" => $data['nama'], "wa" => $data['wa'], "saldo" => $data['saldo']];
+    $result = ["nama" => $data['nama'], "wa" => $data['wa'], "saldo" => $data['saldo'], "email" => $data['email']];
   }else{
-    $result = ["nama" => "-", "wa" => "-", "saldo" => 0];
+    $result = ["nama" => "-", "wa" => "-", "saldo" => 0,"email" => $data['email']];
   }
   return $result;
 }
@@ -359,4 +360,14 @@ function cek_spam($pesan,$tujuan){
       return 'true';
     }
   }
+}
+
+function cek_layanan($id_user,$status){
+  global $layanan;
+  $jml = 0;
+  foreach($layanan as $data){
+    $cek_wa = query("SELECT * FROM $data WHERE id_user = '$id_user' AND `status` = '$status' ");
+    $jml = $jml + mysqli_num_rows($cek_wa);
+  }
+  return $jml;
 }

@@ -2,8 +2,9 @@
 
 date_default_timezone_set('Asia/Makassar');
 
-$nomor_server = ['6285240346020','6287840189270'];
+$nomor_server = ['6285240346020','6287840189270','66968385202'];
 $list_server = glob('status-server/*.json');
+$link_server = array(['nama' => 'server3', 'link' => 'serverwabackup.digicore.web.id'],['nama' => 'server1', 'link' => 'serverwa1.digicore.web.id'],['nama' => 'server2', 'link' => 'serverwa2.digicore.web.id']);
 
 $koneksi = mysqli_connect($_SERVER['HOST'], $_SERVER['USER_DB'], $_SERVER['PASS_DB'], $_SERVER['DB']);
 
@@ -95,82 +96,45 @@ function format_nomor($nomor){
 }
 
 function cek_koneksi(){
-  //mengecek status koneksi whatsapp di server 1
-  $server1 = json_decode(cek_koneksi_wa1(), true);
-  if(isset($server1['code'])){
-    if($server1['results'] != ''){
-      $nomor = explode(':', $server1['results'][0]['device'])[0];
-      $data = ["code" => 200, "categori" => "server1", "status" => "connected", "number" => $nomor, "last_update" => time(), "link_server" => "https://serverwa1.digicore.web.id"];
-
-      $file = fopen("status-server/server1.json","w+");
-      fwrite($file, json_encode($data));
-      fclose($file);
+  //global untuk link server
+  global $link_server;
+  for($i=0; $i<count($link_server); $i++){
+    $nama = $link_server[$i]['nama'];
+    $link = $link_server[$i]['link'];
+    
+    //mengecek status koneksi whatsapp di semua server
+    $server = json_decode(detail_koneksi($link), true);
+    if(isset($server['code'])){
+      if($server['results'] != ''){
+        $nomor = explode(':', $server['results'][0]['device'])[0];
+        $data = ["code" => 200, "categori" => $nama, "status" => "connected", "number" => $nomor, "last_update" => time(), "link_server" => "https://$link"];
+  
+        $file = fopen("status-server/$nama.json","w+");
+        fwrite($file, json_encode($data));
+        fclose($file);
+      }else{
+        $data = ["code" => 501, "categori" => $nama, "status" => "disconnected", "number" => "-", "last_update" => time(), "link_server" => "https://$link"];
+  
+        $file = fopen("status-server/$nama.json","w+");
+        fwrite($file, json_encode($data));
+        fclose($file);
+      }
     }else{
-      $data = ["code" => 501, "categori" => "server1", "status" => "disconnected", "number" => $nomor, "last_update" => time(), "link_server" => "https://serverwa1.digicore.web.id"];
-
-      $file = fopen("status-server/server1.json","w+");
+      $data = ["code" => 404, "categori" => $nama, "status" => "server down", "last_update" => time(), "link_server" => "https://$link"];
+  
+      $file = fopen("status-server/$nama.json","w+");
       fwrite($file, json_encode($data));
       fclose($file);
     }
-  }else{
-    $data = ["code" => 404, "categori" => "server1", "status" => "server down", "last_update" => time(), "link_server" => "https://serverwa1.digicore.web.id"];
 
-    $file = fopen("status-server/server1.json","w+");
-    fwrite($file, json_encode($data));
-    fclose($file);
-  }
-
-  //mengecek status koneksi whatsapp di server 2
-  $server2 = json_decode(cek_koneksi_wa2(), true);
-  if(isset($server2['code'])){
-    if($server2['results'] != ''){
-      $nomor = explode(':', $server2['results'][0]['device'])[0];
-      $data = ["code" => 200, "categori" => "server2", "status" => "connected", "number" => $nomor, "last_update" => time(), "link_server" => "https://serverwa2.digicore.web.id"];
-
-      $file = fopen("status-server/server2.json","w+");
-      fwrite($file, json_encode($data));
-      fclose($file);
-    }else{
-      $data = ["code" => 501, "categori" => "server2", "status" => "disconnected", "number" => $nomor, "last_update" => time(), "link_server" => "https://serverwa2.digicore.web.id"];
-
-      $file = fopen("status-server/server2.json","w+");
-      fwrite($file, json_encode($data));
-      fclose($file);
-    }
-  }else{
-    $data = ["code" => 404, "categori" => "server2", "status" => "server down", "last_update" => time(), "link_server" => "https://serverwa2.digicore.web.id"];
-
-    $file = fopen("status-server/server2.json","w+");
-    fwrite($file, json_encode($data));
-    fclose($file);
   }
 }
 
-function cek_koneksi_wa1(){
+function detail_koneksi($link){
   $curl = curl_init();
   
   curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://serverwa1.digicore.web.id/app/devices',
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_ENCODING => '',
-    CURLOPT_MAXREDIRS => 10,
-    CURLOPT_TIMEOUT => 0,
-    CURLOPT_FOLLOWLOCATION => true,
-    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    CURLOPT_CUSTOMREQUEST => 'GET',
-  ));
-  
-  $response = curl_exec($curl);
-  
-  curl_close($curl);
-  return $response;
-}
-
-function cek_koneksi_wa2(){
-  $curl = curl_init();
-  
-  curl_setopt_array($curl, array(
-    CURLOPT_URL => 'https://serverwa2.digicore.web.id/app/devices',
+    CURLOPT_URL => "https://$link/app/devices",
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => '',
     CURLOPT_MAXREDIRS => 10,
@@ -248,7 +212,7 @@ function cek_spam($pesan,$tujuan){
     $data = mysqli_fetch_assoc($cek_data);
     if(substr($data['pesan'],0,250) == substr($pesan,0,99)){
       $wkt_sekarang = time();
-      if(($wkt_sekarang - $data['id']) < 9000){
+      if(($wkt_sekarang - $data['id']) < 900){
         return 'false';
       }else{
         return 'true';
@@ -273,5 +237,65 @@ function antrian($pesan,$tujuan,$id_layanan, $status = null){
     query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','pending')");
   }else{
     query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','spam')");
+  }
+}
+
+function detail_user($id){
+  $cari_user = query("SELECT * FROM `user` WHERE id = '$id' ");
+  if(mysqli_num_rows($cari_user)>0){
+    $data = mysqli_fetch_assoc($cari_user);
+    $result = ['nama' => $data['nama'], "wa" => $data['wa'], "saldo" => $data['saldo']];
+  }else{
+    $result = false;
+  }
+  return $result;
+}
+
+function produk($kode){
+  $kode = bersihkan($kode);
+  $cari = query("SELECT * FROM `produk` WHERE kode = '$kode' ");
+  if(mysqli_num_rows($cari)>0){
+    $data = mysqli_fetch_assoc($cari);
+    $result = ["nama" => $data['nama'], "kategori" => $data['kategori'], "harga" => $data['harga'], "status" => $data['status']];
+  }else{
+    $result = ["nama" =>"-", "kategori" => "-", "harga" => "-", "status" => "-"];
+  }
+  return $result;
+}
+
+function rupiah($angka) {
+  if($angka > 0){
+    return "Rp " . number_format($angka, 0, ',', '.');
+  }else{
+    return "Rp 0";
+  }
+}
+
+function tgl_indo($tanggal)
+{
+  if ($tanggal != '0000-00-00') {
+    $bulan = array(
+      1 =>   'Januari',
+      'Februari',
+      'Maret',
+      'April',
+      'Mei',
+      'Juni',
+      'Juli',
+      'Agustus',
+      'September',
+      'Oktober',
+      'November',
+      'Desember'
+    );
+    $pecahkan = explode('-', $tanggal);
+
+    // variabel pecahkan 0 = tanggal
+    // variabel pecahkan 1 = bulan
+    // variabel pecahkan 2 = tahun
+
+    return $pecahkan[2] . ' ' . $bulan[(int)$pecahkan[1]] . ' ' . $pecahkan[0];
+  } else {
+    return '-';
   }
 }

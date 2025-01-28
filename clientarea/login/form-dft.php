@@ -64,6 +64,12 @@
                     </div>
 
                     <div class="col-12">
+                      <label for="yourEmail" class="form-label">Email</label>
+                      <input type="email" name="email" class="form-control" id="yourEmail" required>
+                      <div class="invalid-feedback">Email tidak boleh kosong</div>
+                    </div>
+
+                    <div class="col-12">
                       <label for="yourUsername" class="form-label">Nomor Telp</label>
                       <div class="input-group has-validation">
                         <span class="input-group-text" id="inputGroupPrepend"><i class="fa-brands fa-whatsapp"></i></span>

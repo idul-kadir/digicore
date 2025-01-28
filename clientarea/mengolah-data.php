@@ -70,6 +70,9 @@ if(isset($_POST['checkout'])){
           echo 'success|tunnel';
         break;
 
+        case 'Hosting':
+          break;
+
       }
 
     }else{

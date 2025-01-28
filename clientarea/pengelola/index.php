@@ -317,6 +317,10 @@ require '../function.php';
                 <input type="number" class="form-control" id="harga" placeholder="30000" name="harga" required>
               </div>
               <div class="mb-3">
+                <label for="berlaku" class="form-label">Masa Berlaku</label>
+                <input type="number" class="form-control" id="berlaku" placeholder="30" name="berlaku" required>
+              </div>
+              <div class="mb-3">
                 <label for="syarat-terima" class="form-label">S&K Terima</label>
                 <textarea class="form-control" id="syarat-terima" rows="3" name="s-k-terima"></textarea>
               </div>
@@ -346,6 +350,7 @@ require '../function.php';
         new DataTable('table.table-data');
 
         $('#panel-koneksi').load('panel-koneksi.php');
+
         setInterval(() => {
           $('#panel-koneksi').load('panel-koneksi.php');
         }, 60000);

@@ -57,7 +57,7 @@ $_SESSION['halaman'] = 'beranda';
                   <i class="fa-regular fa-circle-check"></i>
                 </div>
                 <div class="ps-3">
-                  <h6>2</h6>
+                  <h6><?= cek_layanan($id,'aktif'); ?></h6>
                 </div>
               </div>
             </div>
@@ -78,7 +78,7 @@ $_SESSION['halaman'] = 'beranda';
                   <i class="fa-regular fa-circle-xmark"></i>
                 </div>
                 <div class="ps-3">
-                  <h6>0</h6>
+                  <h6><?= cek_layanan($id,'expired'); ?></h6>
                 </div>
               </div>
               
