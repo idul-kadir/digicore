@@ -71,7 +71,8 @@ if(isset($_POST['checkout'])){
         break;
 
         case 'Hosting':
-          break;
+          
+        break;
 
       }
 
