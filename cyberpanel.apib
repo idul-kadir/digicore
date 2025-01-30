@@ -1,0 +1,315 @@
+FORMAT: 1A
+HOST: https://talkshosting.com:8090/
+
+# CyberPanel API
+
+This page contains documentation for usage of CyberPanel API, for plugins
+visit [plugin documentation](https://cyberpanel.net/docs/1-getting-started-with-cyberpanel-plugin-development/).
+
+PHP wrapper: https://github.com/jetchirag/cyberpanel-whmcs/blob/master/api.php
+
+
+# Group Server
+
+## Verify Connection [/api/verifyConn]
+### Verify Connection [POST]
+
+Verifying access to API, passing all these arguments as JSON object.
+
++ adminUser (string) - Admin user to verify access to API.
++ adminPass (string) - Password of above admin user.
+
++ Request (application/json)
+
+        {
+            "adminUser": "admin",
+            "adminPass": "1234567"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "verifyConn": "1",
+                "error_message": "Error if any."
+            }
+
+## Login as User [/api/loginAPI]
+### Login as User [POST]
+
+Login as user, passing all these arguments as form data.
+
++ Attributes
+    + username: (string) - Username of user to be logged in as
+    + password: (string) - Password of said user
+
++ Request (application/x-www-form-urlencoded)
+
++ Response 200
+
+    + Body
+
+            {
+                "loginStatus": "1",
+                "error_message": "Error if any.",
+            }
+
+# Group Website Functions
+
+## Create Website [/api/createWebsite]
+### Create New Website [POST]
+
+Create new website, passing all these arguments as JSON object.
+
++ adminUser (string) - Admin user to verify access to API.
++ adminPass (string) - Password of above admin user.
++ domainName (string) - New website address to be created.
++ ownerEmail (string) - Email of the new user being created.
++ packageName (string) - Package to be assigned to this website.
++ websiteOwner (string) - Owner of this website being created (does not need to exist).
++ ownerPassword (string) - Password of new user being.
++ websitesLimit (int) (optional) - Websites limit of the user, if not specified it defaults to 1.
++ acl (string)(optional) - ACL of new user, defaults to 'user'
+
++ Request (application/json)
+
+        {
+            "adminUser": "admin",
+            "adminPass": "1234567",
+            "domainName": "cyberpanel.net",
+            "ownerEmail": "info@cyberpanel.net",
+            "packageName": "Default",
+            "websiteOwner": "newowner",
+            "ownerPassword": "password"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "createWebSiteStatus": "1",
+                "error_message": "Error if any.",
+            }
+            
+## Delete Website [/api/deleteWebsite]
+### Delete Website [POST]
+
+Deleting a website, passing all these arguments as JSON object.
+
++ adminUser (string) - Admin user to verify access to API.
++ adminPass (string) - Password of above admin user.
++ domainName (string) - Website Name to be deleted.
+
++ Request (application/json)
+
+        {
+            "adminUser": "admin",
+            "adminPass": "1234567",
+            "domainName": "cyberpanel.net"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "websiteDeleteStatus": "1",
+                "error_message": "Error if any.",
+                
+            }
+            
+## Change Website Package [/api/changePackageAPI]
+### Change Website Package [POST]
+
+Changing a Website Package, passing all these arguments as JSON object.
+
++ adminUser (string) - Admin user to verify access to API.
++ adminPass (string) - Password of above admin user.
++ websiteName (string) - Website Name.
++ packageName (string) - Package name (This package must exist in CyberPanel).
+
++ Request (application/json)
+
+        {
+            "adminUser": "admin",
+            "adminPass": "1234567",
+            "websiteName": "cyberpanel.net",
+            "packageName": "NewPackage"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "changePackage": "1",
+                "error_message": "Error if any.",
+                
+            }
+            
+## Suspend/Un-suspend Website [/api/submitWebsiteStatus]
+### Suspend/Un-suspend Website [POST]
+
+Suspend/Un-suspend a Website, passing all these arguments as JSON object.
+
++ adminUser (string) - Admin user to verify access to API.
++ adminPass (string) - Password of above admin user.
++ websiteName (string) - Website Name.
++ state (string) - State can be 'Suspend' or 'Activate'
+
++ Request (application/json)
+
+        {
+            "adminUser": "admin",
+            "adminPass": "1234567",
+            "websiteName": "cyberpanel.net",
+            "state": "Suspend"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "websiteStatus": "1",
+                "error_message": "Error if any.",
+                
+            }
+            
+# Group User Functions
+
+## Create new user [/api/submitUserCreation]
+### Create a new CyberPanel user [POST]
+
+Creating new user, passing all these arguments as JSON object.
+
++ adminUser (string) - Admin user to verify access to API.
++ adminPass (string) - Password of above admin user.
++ firstName (string) - First Name of new user.
++ lastName (string) - Last Name of new user.
++ email (string) - Email of new user.
++ userName (string) - User name (throug which they login) for new user.
++ password (string) - Password for new user.
++ websitesLimit (int) - Last Name of new user.
++ acl (string) - ACL to be assigned to the new user, examples are 'admin', 'reseller', 'user' or any custom ACLs created by admin.
++ securityLevel (string) - 'HIGH' or 'LOW'
+
++ Request (application/json)
+
+        {
+            "adminUser": "admin",
+            "adminPass": "1234567",
+            "firstName": "Usman",
+            "lastName": "Nasir",
+            "email": "usman@cyberpersons.com",
+            "userName": "usman",
+            "password": "helloworld123",
+            "websitesLimit": 50,
+            "selectedACL": "user",
+            "securityLevel": "HIGH",
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "status": "1",
+                "error_message": "Error if any.",
+            }
+
+## Get User Information [/api/getUserInfo]
+
+### Get information about User [POST]
+
+Getting user information, passing all these arguments as JSON object.
+
++ adminUser (string) - Admin user to verify access to API.
++ adminPass (string) - Password of above admin user.
++ userName (string) - Supply username whose information is required.
+
++ Request (application/json)
+
+        {
+            "adminUser": "admin",
+            "adminPass": "1234567",
+            "username": "cyberpanel"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "status": "1",
+                "firstName": "Contains user first name if status is 1",
+                "lastName": "Contains user last name if status is 1",
+                "email": "Contains user email address if status is 1",
+                "adminStatus": "Contains user admin status if status is 1",
+                "error_message": "Error if any.",
+            }
+
+## Change User Password [/api/changeUserPassAPI]
+### Change password for User [POST]
+
+Changing user password, passing all these arguments as JSON object.
+
++ adminUser (string) - Admin user to verify access to API.
++ adminPass (string) - Password of above admin user.
++ websiteOwner (string) - Supply username (whose password needs to be changed).
++ ownerPassword (string) - New password for the user.
+
++ Request (application/json)
+
+        {
+            "adminUser": "admin",
+            "adminPass": "1234567",
+            "websiteOwner": "cyberpanel",
+            "ownerPassword": "password"
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "changeStatus": "1",
+                "error_message": "Error if any.",
+            }
+
+
+# Group Firewall
+
+## Add Firewall Rule [/api/addFirewallRule]
+### Add Firewall Rule [POST]
+
+Adding firewall rule, passing all these arguments as JSON object.
+
++ adminUser (string) - Admin user to verify access to API.
++ adminPass (string) - Password of above admin user.
++ ruleName (string) - Any user friendly name.
++ ruleProtocol (string) - TCP or UDP.
++ rulePort (string) - Port to be opened.
++ ruleIP (string) - Open port for specified ip (Use 0.0.0.0/0 for all IPs).
+
++ Request (application/json)
+
+        {
+            "adminUser": "admin",
+            "adminPass": "1234567",
+            "ruleName" : "cprule",
+            "ruleProtocol" : "tcp/udp",
+            "rulePort" : "8080",
+            "ruleIP" : "192.168.100.1",
+        }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "status": "1",
+                "error_message": "Error if any."
+            }
