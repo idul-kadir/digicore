@@ -371,3 +371,16 @@ function cek_layanan($id_user,$status){
   }
   return $jml;
 }
+
+function pesan_administrator($pesan){
+  kirim_pesan($pesan,'089669106718');
+}
+
+function percakapan($id_user,$id_topik,$teks){
+  $id_percakapan = time();
+  do{
+    $id = $id_percakapan++;
+    $cekId = query("SELECT * FROM `percakapan` WHERE id = '$id' ");
+  }while(mysqli_num_rows($cekId)>0);
+  query("INSERT INTO `percakapan`(`id`, `id_topik`, `id_user`, `teks`) VALUES ('$id','$id_topik','$id_user','$teks')");
+}

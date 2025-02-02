@@ -19,6 +19,14 @@ switch($keterangan){
         if(mysqli_num_rows($cek_api)>0){
           if(isset($data['pesan']) && isset($data['tujuan'])){
             $data_api = mysqli_fetch_assoc($cek_api);
+
+            //menentukan server
+            if($data_api['apikey'] == 'v1IsN2FNL5WLALqGfWpOUAhthQR4Jch31737286333605'){
+              $server = 'server3.json';
+            }else{
+              $server = '';
+            }
+
             $id_layanan = $data_api['id'];
             if(cek_spam($data['pesan'], $data['tujuan']) == 'true'){
               if($data_api['kode_produk'] == 'FREE'){
@@ -27,7 +35,7 @@ switch($keterangan){
                 $cek_pesan = query("SELECT * FROM `pesan` WHERE id_produk = '$id_layanan' AND MONTH(FROM_UNIXTIME(`id`)) = '$bln_skrang' AND YEAR(FROM_UNIXTIME(`id`)) = '$thn_skrang' ");
                 if(mysqli_num_rows($cek_pesan) <= 350){
                   $pesan = $data['pesan']. $pesan_sponsor;
-                  antrian($pesan,$data['tujuan'],$id_layanan);
+                  antrian($pesan,$data['tujuan'],$id_layanan,null,$server);
                   $jml_limit = 350 - mysqli_num_rows($cek_pesan) - 1;
                   $result = ['kode' => 200, "keterangan" => "Pesan sudah masuk antrian. Pesan gratis anda masih tersisa $jml_limit lagi"];    
                 }else{
@@ -39,15 +47,15 @@ switch($keterangan){
                 }else{
                   $pesan = $data['pesan'];
                 }
-                antrian($pesan,$data['tujuan'],$id_layanan);
+                antrian($pesan,$data['tujuan'],$id_layanan,null,$server);
                 $result = ['kode' => 200, "keterangan" => "Pesan OTP sudah masuk antrian."];
               }else{
-                antrian($data['pesan'],$data['tujuan'],$id_layanan);
+                antrian($data['pesan'],$data['tujuan'],$id_layanan,null,$server);
                 $result = ['kode' => 200, "keterangan" => "Pesan sudah masuk antrian."];
               }
             }else{
               $result = ['kode' => 501, "keterangan" => "Pesan terindikasi SPAM. Pesan anda akan dikirim 30 menit dari sekarang"];
-              antrian($data['pesan'],$data['tujuan'],$id_layanan, 'spam');
+              antrian($data['pesan'],$data['tujuan'],$id_layanan, 'spam', $server);
             }
           }else{
             $result = ['kode' => 501, "keterangan" => "Parameter required tidak dikenali"];

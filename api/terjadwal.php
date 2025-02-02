@@ -11,7 +11,11 @@ for($i=0; $i<3; $i++){
     $pesan = $data['pesan'];
     $id = $data['id'];
     $eksekusi = time();
-    $hasil = kirim_pesan($pesan,$tujuan);
+    if($data['keterangan'] != ''){
+      $hasil = kirim_pesan($pesan,$tujuan,null,$data['keterangan']);
+    }else{
+      $hasil = kirim_pesan($pesan,$tujuan);
+    }
     if($hasil != false){
       $result = json_decode($hasil, true);
       $server = $result['server'];
@@ -34,6 +38,10 @@ for($i=0; $i<3; $i++){
       }
       query("UPDATE `pesan` SET `terkirim`='$eksekusi',`status`='$status',`keterangan`='$keterangan' WHERE id = '$id' ");
       sleep(17+$i);
+    }else{
+      if($data['keterangan'] != ''){
+        query("UPDATE `pesan` SET `keterangan`='' WHERE id = '$id' ");
+      }
     }
   }else{
     sleep(15);

@@ -30,7 +30,7 @@ function bersihkan($data) {
   return $data;
 }
 
-function kirim_pesan($pesan, $tujuan, $id_pesan = null) {
+function kirim_pesan($pesan, $tujuan, $id_pesan = null, $r_server=null) {
   $server = generate_server_pengirim($tujuan);
   if($server != false){  
     if($id_pesan == null){
@@ -46,6 +46,10 @@ function kirim_pesan($pesan, $tujuan, $id_pesan = null) {
         "message" => $pesan,
         "reply_message_id" => $id_pesan
       );
+    }
+
+    if($r_server != null){
+      $server = $r_server;
     }
 
     $data_server = json_decode(file_get_contents("status-server/$server"), true);
@@ -223,7 +227,7 @@ function cek_spam($pesan,$tujuan){
   }
 }
 
-function antrian($pesan,$tujuan,$id_layanan, $status = null){
+function antrian($pesan,$tujuan,$id_layanan, $status = null, $server=null){
   $tujuan = format_nomor(bersihkan($tujuan));
   $i = 0;
   do{
@@ -234,9 +238,17 @@ function antrian($pesan,$tujuan,$id_layanan, $status = null){
   
   $pesan = bersihkan($pesan);
   if($status == null){
-    query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','pending')");
+    if($server != null){
+      query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`,`keterangan`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','pending','$server')");  
+    }else{
+      query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','pending')");
+    }
   }else{
-    query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','spam')");
+    if($server != null){
+      query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`,`keterangan`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','spam','$server')");  
+    }else{
+      query("INSERT INTO `pesan`(`id`, `tujuan`, `pesan`, `id_produk`, `status`) VALUES ('$id_pesan','$tujuan','$pesan','$id_layanan','spam')");
+    }
   }
 }
 

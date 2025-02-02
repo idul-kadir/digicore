@@ -114,3 +114,57 @@ if(isset($_POST['tambah-firewall'])){
     echo 'error|Gagal di buatkan FireWall';
   }
 }
+
+//menambahkan tiket baru
+if(isset($_POST['new-tiket'])){
+  $id_tiket = bersihkan($_POST['new-tiket']);
+  $judul = bersihkan($_POST['judul']);
+  $kategori = bersihkan($_POST['kategori']);
+  $prioritas = bersihkan($_POST['prioritas']);
+  $deskripsi = bersihkan($_POST['deskripsi']);
+  $file = '';
+  $alert_file = '';
+
+  do{
+    $id_baru = $id_tiket++;
+    $cek = query("SELECT * FROM `tiket` WHERE id = '$id_baru' ");
+  }while(mysqli_num_rows($cek)>0);
+
+  if(isset($_FILES['lampiran']['name'])){
+    $data_file = $_FILES['lampiran'];
+    $list_format = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp', 'svg', 'tiff', 'ico', 'heif', 'heic', 'jxr', 'avif', 'webm', 'apng','pdf'];
+    $nama_file = $data_file['name'];
+    $ukuran = $data_file['size'];
+    $cari_format = explode('.',$nama_file);
+    if($ukuran < 5000000){
+      if(in_array(strtolower(end($cari_format)), $list_format)){
+        $file = 'assets/ticket/'.$id_baru.'.'.end($cari_format);
+        move_uploaded_file($data_file['tmp_name'],$file);
+      }else{
+        $alert_file = ' file tidak dicantumkan karena format file tidak sesuai yang ditetapkan';
+      }
+    }else{
+      $alert_file = ' file tidak dicantumkan karena melebihi ukuran yang ditetapkan';
+    }
+  }
+
+  $tambah = query("INSERT INTO `tiket`(`id`, `judul`, `kategori`, `prioritas`, `deskripsi`, `lampiran`, `status`,`id_user`) VALUES ('$id_baru','$judul','$kategori','$prioritas','$deskripsi','$file','open','$id')");
+  if($tambah){
+    $nama_pengguna = pengguna($id)['nama'];
+    $nomor = pengguna($id)['wa'];
+    echo "success|Tiket berhasil dibuat. Saat ini sudah diteruskan ke Tim Support untuk secepatnya ditanggapi".$alert_file;
+    $pesan = "*KONSULTASI*\n".
+             "============================\n\n".
+             "Nama : $nama_pengguna\n".
+             "Nomor Wa : $nomor\n\n".
+             "*Judul* : \n".
+             "$judul".
+             "\n\n".
+             "*Deskripsi* :\n".
+             "$deskripsi";
+    pesan_administrator($pesan);
+  }else{
+    echo "error|Tiket GAGAL dibuat. Periksa koneksi jaringan anda dan coba lagi setelah 10 menit".$alert_file;
+  }
+
+}

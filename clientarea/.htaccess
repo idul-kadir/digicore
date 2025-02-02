@@ -30,6 +30,8 @@ RewriteRule ^whatsapp$ hal-whatsapp.php [L]
 RewriteRule ^vpn$ hal-vpn.php [L]
 RewriteRule ^hosting$ hal-hosting.php [L]
 RewriteRule ^ippublic hal-ippublic.php [L]
+RewriteRule ^konsultasi hal-konsultasi.php [L]
+RewriteRule ^ajax komponen-ajax.php [L]
 
 RewriteRule ^admin$ pengelola/index.php [L]
 RewriteRule ^config$ function.php [L]

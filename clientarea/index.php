@@ -51,7 +51,7 @@ if(!isset($_SESSION['halaman'])){
   <header id="header" class="header fixed-top d-flex align-items-center">
 
     <div class="d-flex align-items-center justify-content-between">
-      <a href="index.html" class="logo d-flex align-items-center">
+      <a href="beranda" class="logo d-flex align-items-center">
         <img src="assets/img/logo.png" alt="">
         <span class="d-none d-lg-block">DigiCore</span>
       </a>
@@ -133,7 +133,7 @@ if(!isset($_SESSION['halaman'])){
       <li class="nav-item">
         <a class="nav-link collapsed" href="konsultasi">
           <i class="fa-solid fa-comments"></i>
-          <span>Konsultasi</span>
+          <span>Pertanyaan / Konsultasi</span>
         </a>
       </li><!-- End Konsultan -->
 
