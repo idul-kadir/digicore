@@ -168,3 +168,14 @@ if(isset($_POST['new-tiket'])){
   }
 
 }
+
+if(isset($_POST['reply-ticket'])){
+  $id_ticket = bersihkan($_POST['id-ticket']);
+  $pesan = bersihkan($_POST['deskripsi']);
+  $cek_ticket = query("SELECT * FROM `tiket` WHERE id = '$id_ticket' AND id_user = '$id' ");
+  if(mysqli_num_rows($cek_ticket)>0){
+    echo 'success|Pesan anda sudah diterima. Mohon untuk tidak melakukan pesan berulang yah';
+  }else{
+    echo 'error|Opps, sepertinya form anda sudah dimodifikasi sebelumnya. Jika anda tidak pernah memodifikasi form, silahkan logout dan login kembali';
+  }
+}

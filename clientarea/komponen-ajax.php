@@ -94,8 +94,9 @@ if(isset($_POST['detail-tiket'])){
 <div>
   <h5>Balas Tiket</h5>
   <form id="replyForm">
+    <input type="text" value="<?= $id_ticket ?>" name="id-ticket" hidden>
     <div class="mb-3">
-      <textarea class="form-control" id="replyMessage" rows="3" placeholder="Tulis balasan Anda di sini..."></textarea>
+      <textarea class="form-control" name="deskripsi" id="replyMessage" rows="3" placeholder="Tulis balasan Anda di sini..."></textarea>
     </div>
     <button type="submit" class="btn btn-primary">Kirim Balasan</button>
   </form>
@@ -104,5 +105,21 @@ if(isset($_POST['detail-tiket'])){
 }
 ?>
 <script>
-  
+  $(document).ready(function(){
+    $('#replyForm').submit(function(e){
+      e.preventDefault();
+      let id = $('[name="id-ticket"]').val();
+      let data = $(this).serialize();
+      $.post('proses-data','reply-ticket=true&'+data, function(respon){
+        let pecah = respon.split('|');
+        Swal.fire({
+          position: "center",
+          icon: pecah[0],
+          title: pecah[1],
+          showConfirmButton: false,
+          timer: 2500
+        });
+      })
+    })
+  })
 </script>
