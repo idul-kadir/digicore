@@ -12,7 +12,7 @@ if(isset($data)){
 
   switch ($keterangan){
     case 'buat-website':
-      $kirim = ["adminUser" => $_SERVER['USER_CP'], "adminPass" => $_SERVER['PASS_CP'], "domainName" => $data['domainName'], "ownerEmail" => $data['ownerEmail'], "packageName" => $data['packageName'], "websiteOwner" => $data['websiteOwner'], "ownerPassword" => $data['ownerPassword']];
+      $kirim = ["adminUser" => $_SERVER['USER_CP'], "adminPass" => $_SERVER['PASS_CP'], "domainName" => $data['domainName'], "ownerEmail" => $data['ownerEmail'], "packageName" => $data['packageName'], "websiteOwner" => $data['websiteOwner'], "ownerPassword" => $data['ownerPassword'], "selectedACL" => "user"];
       $result = json_decode(buat_website($kirim), true);
     break;
     
@@ -25,7 +25,7 @@ if(isset($data)){
 function buat_website($data){
   global $host;
   $curl = curl_init();
-
+  
   curl_setopt_array($curl, array(
     CURLOPT_URL => $host.'/api/createWebsite',
     CURLOPT_RETURNTRANSFER => true,
@@ -39,17 +39,11 @@ function buat_website($data){
     CURLOPT_HTTPHEADER => array(
       'Content-Type: application/json'
     ),
-    CURLOPT_SSL_VERIFYPEER => false,   // Menonaktifkan verifikasi peer
-    CURLOPT_SSL_VERIFYHOST => false    // Menonaktifkan verifikasi host
   ));
-
+  
   $response = curl_exec($curl);
-
-  // Menangani error curl
-    if(curl_errno($curl)) {
-        echo 'Curl error: ' . curl_error($curl);
-    }
-
+  
   curl_close($curl);
   return $response;
+
 }

@@ -14,7 +14,7 @@ if(isset($_POST['checkout'])){
       if(mysqli_num_rows($cari)>0){
         $data = mysqli_fetch_assoc($cari);
         ?>
-        <p>Anda akan memesan layanan Whatsapp gateway dengan kode paket <b><?= $data['nama'] ?></b> dengan harga <span class="badge bg-success"><?= rupiah($data['harga']) ?></span>. Pastikan anda sudah membaca syarat dan ketentuan dari paket tersebut sebelum menyelesaikan proses checkout ini. <mark>Segala bentuk kesalahan ataupun kelalaian adalah tanggung jawab pengguna sepenuhnya.</mark><i class="fa-regular fa-face-smile-beam"></i></p>
+        <p>Anda akan memesan layanan <?= $data['kategori'] ?> dengan kode paket <b><?= $data['nama'] ?></b> dengan harga <span class="badge bg-success"><?= rupiah($data['harga']) ?></span>. Pastikan anda sudah membaca syarat dan ketentuan dari paket tersebut sebelum menyelesaikan proses checkout ini. <mark>Segala bentuk kesalahan ataupun kelalaian adalah tanggung jawab pengguna sepenuhnya.</mark><i class="fa-regular fa-face-smile-beam"></i></p>
         <p>Terima kasih atas kepercayaan anda pada digicore</p>
         <?php
         if($kode_produk == 'FREE'){

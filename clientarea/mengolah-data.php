@@ -174,7 +174,17 @@ if(isset($_POST['reply-ticket'])){
   $pesan = bersihkan($_POST['deskripsi']);
   $cek_ticket = query("SELECT * FROM `tiket` WHERE id = '$id_ticket' AND id_user = '$id' ");
   if(mysqli_num_rows($cek_ticket)>0){
-    echo 'success|Pesan anda sudah diterima. Mohon untuk tidak melakukan pesan berulang yah';
+    $id_percakapan = time();
+    do{
+      $id_percakapan++;
+      $cek_id = query("SELECT * FROM `percakapan` WHERE id = '$id_percakapan' ");
+    }while(mysqli_num_rows($cek_id)>0);
+    $input_pesan = query("INSERT INTO `percakapan`(`id`, `id_topik`, `id_user`, `teks`) VALUES ('$id_percakapan','$id_ticket','$id','$pesan')");
+    if($input_pesan){
+      echo 'success|Pesan anda sudah diterima. Mohon untuk tidak melakukan pesan berulang yah';
+    }else{
+      echo 'error|Sepertinya terjadi kesalahan ketika anda mengirimkan pesan. Silahkan diulang yah kak';
+    }
   }else{
     echo 'error|Opps, sepertinya form anda sudah dimodifikasi sebelumnya. Jika anda tidak pernah memodifikasi form, silahkan logout dan login kembali';
   }

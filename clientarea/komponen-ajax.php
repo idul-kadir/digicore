@@ -58,7 +58,7 @@ if(isset($_POST['detail-tiket'])){
   <div class="card mb-3 bg-light border-start border-primary ms-auto" style="max-width: 80%;">
     <div class="card-body d-flex flex-column">
       <p class="mb-1"><strong><?= $pengguna['nama'] ?>:</strong> <?= $data['deskripsi'] ?></p>
-      <small class="text-muted ms-auto"><?= date('m-d-Y', $data['id']). ' ' .date('H:i', $data['id']) ?></small>
+      <small class="text-muted ms-auto"><?= date('d-m-Y', $data['id']). ' ' .date('H:i', $data['id']) ?></small>
     </div>
   </div>
   <?php
@@ -70,7 +70,7 @@ if(isset($_POST['detail-tiket'])){
     <div class="card mb-3 bg-light border-start border-primary ms-auto" style="max-width: 80%;">
       <div class="card-body d-flex flex-column">
         <p class="mb-1"><strong><?= $pengguna['nama'] ?>:</strong> <?= $percakapan['teks'] ?></p>
-        <small class="text-muted ms-auto"><?= date('m-d-Y', $percakapan['id']). ' ' .date('H:i', $percakapan['id']) ?></small>
+        <small class="text-muted ms-auto"><?= date('d-m-Y', $percakapan['id']). ' ' .date('H:i', $percakapan['id']) ?></small>
       </div>
     </div>
   <?php
@@ -80,7 +80,7 @@ if(isset($_POST['detail-tiket'])){
     <div class="card mb-3 bg-light border-start border-success me-auto" style="max-width: 80%;">
       <div class="card-body d-flex flex-column">
         <p class="mb-1"><strong>Support:</strong> <?= $percakapan['teks']; ?></p>
-        <small class="text-muted ms-auto"><?= date('m-d-Y', $percakapan['id']). ' ' .date('H:i', $percakapan['id']) ?></small>
+        <small class="text-muted ms-auto"><?= date('d-m-Y', $percakapan['id']). ' ' .date('H:i', $percakapan['id']) ?></small>
       </div>
     </div>
   <?php 
@@ -98,7 +98,7 @@ if(isset($_POST['detail-tiket'])){
     <div class="mb-3">
       <textarea class="form-control" name="deskripsi" id="replyMessage" rows="3" placeholder="Tulis balasan Anda di sini..."></textarea>
     </div>
-    <button type="submit" class="btn btn-primary">Kirim Balasan</button>
+    <button type="submit" class="btn btn-primary" id="tbl-reply">Kirim Balasan</button>
   </form>
 </div>
 <?php
@@ -110,6 +110,8 @@ if(isset($_POST['detail-tiket'])){
       e.preventDefault();
       let id = $('[name="id-ticket"]').val();
       let data = $(this).serialize();
+      $('#tbl-reply').attr('disabled', true);
+      $('#tbl-reply').text('Mengirim pesan...');
       $.post('proses-data','reply-ticket=true&'+data, function(respon){
         let pecah = respon.split('|');
         Swal.fire({
@@ -119,6 +121,11 @@ if(isset($_POST['detail-tiket'])){
           showConfirmButton: false,
           timer: 2500
         });
+        setTimeout(() => {
+          $.post('ajax','detail-tiket='+ id, function(respon){
+            $('#content-detail').html(respon);
+          })
+        }, 2500);
       })
     })
   })
