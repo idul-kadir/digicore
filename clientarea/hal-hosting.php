@@ -7,6 +7,7 @@ if(!isset($_SESSION['id'])){
 $id = $_SESSION['id'];
 $_SESSION['halaman'] = 'hosting';
 require 'function.php';
+$pecah = explode(' ',pengguna($id)['nama']);
 ?>
 <style>
   h5{
@@ -18,11 +19,75 @@ require 'function.php';
   table tr td{
     vertical-align: text-top
   }
+
+  .card-body{
+    padding-top:20px
+  }
 </style>
 
 <div class="row">
   <div class="col-sm-12 col-md-6">
-
+    <?php
+      $cek_layanan = query("SELECT * FROM `l_hosting` WHERE id_user='$id' ");
+      if(mysqli_num_rows($cek_layanan)>0){
+        while($data_layanan = mysqli_fetch_assoc($cek_layanan)){
+          if($data_layanan['status'] == 'aktif'){
+            $label_c = 'text-white';
+            if($data_layanan['domain'] == ''){
+              $bg_label = 'bg-primary';
+            }else{
+              $bg_label = 'bg-success';
+            }
+          }else{
+            $label_c = 'text-black';
+            $bg_label = 'bg-secondary';
+          }
+    ?>
+    <div class="card">
+      <h5 class="card-header <?= $bg_label . ' '. $label_c ?>"><?= produk($data_layanan['kode_produk'])['nama'] ?> / EXP <?= tgl_indo($data_layanan['tgl_expired']) ?></h5>
+      <div class="card-body">
+        <form action="#" id="form-buatWebsite" data-id="<?= $data_layanan['id'] ?>">
+          <?php
+            if($data_layanan['domain'] == ''){
+          ?>
+          <!-- <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Email</label>
+            <input type="email" class="form-control" name="email" id="exampleFormControlInput1" placeholder="name@example.com" value="<?= pengguna($id)['email'] ?>">
+          </div>
+          <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" placeholder="name@example.com" value="digi<?= substr(time(),-2,2) ?>_<?= strtolower($pecah[0]); ?>" readonly>
+          </div> -->
+          <div class="mb-3">
+            <label for="domain" class="form-label">Domain</label>
+            <input type="text" class="form-control" id="domain" placeholder="example.com" name="domain" autocomplete="no" required>
+          </div>
+          <hr>
+          <p>Hal yang harus anda perhatikan:</p>
+          <ul>
+            <li>Pastikan domain yang ingin anda daftarkan adalah milik anda dan sudah aktif</li>
+            <li>Arahkan domain anda ke IP Server Hosting dari digicore yakni <mark>107.173.127.182</mark></li>
+            <li>Atau jika anda ingin mengelola domain langsung di server digicore, silahkan anda ganti nameserver domain anda dengan <mark>ns1.digicore.web.id</mark> dan <mark>ns2.digicore.web.id</mark></li>
+          </ul>
+          <div class="d-grid gap-2">
+            <button class="btn btn-primary" type="submit" id="<?= $data_layanan['id'] ?>"><i class="fa-solid fa-globe"></i> Tambah Website</button>
+          </div>
+        </form>
+        <?php
+          }
+        ?>
+      </div>
+    </div>
+    <?php
+        }
+      }else{
+    ?>
+    <div class="alert alert-danger" role="alert">
+      Anda tidak memiliki layanan hosting. Yuk langganan hosting.
+    </div>
+    <?php
+      }
+    ?>
   </div>
   <div class="col-sm-12 col-md-6">
     <div class="row">
@@ -134,5 +199,31 @@ require 'function.php';
         }, 2600);
       })
     })
+
+    $('#form-buatWebsite').submit(function(r){
+      r.preventDefault();
+      let data = $(this).serialize();
+      let id = $(this).attr('data-id');
+      let tombol = $('#' + id);
+      tombol.attr('disabled', true);
+      tombol.html('<i class="fa-solid fa-globe fa-spin-pulse"></i> Mendaftarkan domain...');
+      $.post('proses-data','buat-website='+id+'&'+data, function(respon){
+        let pecah = respon.split('|');
+        Swal.fire({
+          position: "center",
+          icon: pecah[0],
+          title: pecah[1],
+          showConfirmButton: false,
+          timer: 2500
+        });
+        if(pecah[0] == 'success'){
+          setTimeout(() => {
+            location.reload();
+          }, 3000);
+        }
+      })
+    })
+
+
   })
 </script>

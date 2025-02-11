@@ -25,7 +25,7 @@ if(isset($data)){
 function buat_website($data){
   global $host;
   $curl = curl_init();
-  
+
   curl_setopt_array($curl, array(
     CURLOPT_URL => $host.'/api/createWebsite',
     CURLOPT_RETURNTRANSFER => true,
@@ -40,10 +40,31 @@ function buat_website($data){
       'Content-Type: application/json'
     ),
   ));
-  
-  $response = curl_exec($curl);
-  
-  curl_close($curl);
-  return $response;
 
+  // Menonaktifkan verifikasi SSL
+  curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+
+  // Eksekusi request dan ambil responsenya
+  $response = curl_exec($curl);
+
+  // Pengecekan error eksekusi cURL
+  if ($response === false) {
+    echo "cURL Error: " . curl_error($curl); // Menampilkan error cURL jika request gagal
+    curl_close($curl); // Menutup cURL jika error
+    return false; // Mengembalikan false jika request gagal
+  }
+
+  // Pengecekan status HTTP response code
+  $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE); // Mendapatkan status code HTTP
+  if ($http_code != 200) {
+    echo "HTTP Error: " . $http_code . " - Response: " . $response; // Menampilkan error jika status code tidak 200 (OK)
+    curl_close($curl); // Menutup cURL jika ada masalah HTTP
+    return false; // Mengembalikan false jika status code bukan 200
+  }
+
+  // Tutup cURL setelah selesai
+  curl_close($curl);
+
+  return $response; // Mengembalikan response yang sukses
 }

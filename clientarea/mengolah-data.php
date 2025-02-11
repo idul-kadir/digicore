@@ -71,7 +71,20 @@ if(isset($_POST['checkout'])){
         break;
 
         case 'Hosting':
-          
+          $berlaku = $data['masa_berlaku'];
+          $kadaluarsa = date('Y-m-d', strtotime("+$berlaku days"));
+          do{
+            $cek_id = query("SELECT * FROM `l_hosting` WHERE id = '$id_layanan' ");
+            $jml_baris = mysqli_num_rows($cek_id);
+            if($jml_baris > 0){
+              $id_layanan++;
+            }
+          }while($jml_baris > 0);
+          $tambah_layanan = query("INSERT INTO `l_hosting`(`id`, `kode_produk`, `id_user`, `tgl_expired`, `perpanjang`, `status`) VALUES ('$id_layanan','$kode','$id','$kadaluarsa','$perpanjang','aktif')");
+          if($tambah_layanan){
+            $saldo = saldo($id,'kurang',$data['harga']);
+            echo 'success|Layanan hosting berhasil dibuat';
+          }
         break;
 
       }
@@ -188,4 +201,51 @@ if(isset($_POST['reply-ticket'])){
   }else{
     echo 'error|Opps, sepertinya form anda sudah dimodifikasi sebelumnya. Jika anda tidak pernah memodifikasi form, silahkan logout dan login kembali';
   }
+}
+
+if(isset($_POST['buat-website'])){
+  $id_layanan = bersihkan($_POST['buat-website']);
+  $domain = bersihkan($_POST['domain']);
+  $cek_domain = query("SELECT * FROM `l_hosting` WHERE id = '$id_layanan' AND id_user = '$id' ");
+  if(mysqli_num_rows($cek_domain)<1){
+    $data = mysqli_fetch_assoc($cek_domain);
+    if($data['domain'] != $domain){
+      
+    }else{
+      echo 'error|Domain yang anda daftarkan sudah ada dalam server kami';
+    }
+  }else{
+    echo 'error|Layanan anda tidak terdaftar';
+  }
+}
+
+function buat_website($data){
+  $curl = curl_init();
+  
+  curl_setopt_array($curl, array(
+    CURLOPT_URL => 'https://api.digicore.web.id/cyberpanel/buat-website',
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => '',
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 0,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => 'POST',
+    CURLOPT_POSTFIELDS =>'{
+      "domainName": "hosting.digicore.web.id",
+      "ownerEmail": "info@cyberpanel.net",
+      "packageName": "admin_basic",
+      "websiteOwner": "srigit",
+      "ownerPassword": "tes12345",
+      "selectedACL": "user"
+      }',
+      CURLOPT_HTTPHEADER => array(
+        'Content-Type: application/json'
+      ),
+    ));
+    
+    $response = curl_exec($curl);
+    
+    curl_close($curl);
+    return $response;
 }
